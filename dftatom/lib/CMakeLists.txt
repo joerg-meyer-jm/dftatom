@@ -3,6 +3,7 @@ set(SRC
     )
 
 include_directories(${PYTHON_INCLUDE_PATH} ${NUMPY_INCLUDE_PATH})
+include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${dftatom_BINARY_DIR}/src)
 
 cython_add_module_pyx(dftatom_wrapper)

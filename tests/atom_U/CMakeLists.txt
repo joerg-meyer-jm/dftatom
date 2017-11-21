@@ -1,3 +1,4 @@
+include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${PROJECT_BINARY_DIR}/src)
 
 project(atom_U)
