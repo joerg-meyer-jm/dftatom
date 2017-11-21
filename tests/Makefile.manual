@@ -4,16 +4,16 @@ LDFLAGS = -ldftatom -L../../src
 export LDFLAGS
 
 all:
-	cd lda; make -f Makefile.manual
-	cd rlda; make -f Makefile.manual
-	cd atom_U; make -f Makefile.manual
+	$(MAKE) -C lda -f Makefile.manual
+	$(MAKE) -C rlda -f Makefile.manual
+	$(MAKE) -C atom_U -f Makefile.manual
 
 test:
-	cd lda; make -f Makefile.manual test
-	cd rlda; make -f Makefile.manual test
-	cd atom_U; make -f Makefile.manual test
+	$(MAKE) -C lda -f Makefile.manual test
+	$(MAKE) -C rlda -f Makefile.manual test
+	$(MAKE) -C atom_U -f Makefile.manual test
 
 clean:
-	cd lda; make -f Makefile.manual clean
-	cd rlda; make -f Makefile.manual clean
-	cd atom_U; make -f Makefile.manual clean
+	$(MAKE) -C lda -f Makefile.manual clean
+	$(MAKE) -C rlda -f Makefile.manual clean
+	$(MAKE) -C atom_U -f Makefile.manual clean

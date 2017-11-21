@@ -34,14 +34,14 @@ export F90
 export F90FLAGS
 
 all:
-	cd src; make -f Makefile.manual
-	cd tests; make -f Makefile.manual
+	$(MAKE) -C src -f Makefile.manual
+	$(MAKE) -C tests -f Makefile.manual
 
 test:
-	cd tests; make -f Makefile.manual test
+	$(MAKE) -C tests -f Makefile.manual test
 	@echo
 	@echo "All tests passed."
 
 clean:
-	cd src; make -f Makefile.manual clean
-	cd tests; make -f Makefile.manual clean
+	$(MAKE) -C src -f Makefile.manual clean
+	$(MAKE) -C tests -f Makefile.manual clean
