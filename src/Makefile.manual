@@ -1,6 +1,7 @@
 PROG = libdftatom.a
 
-OBJS =	constants.o dft.o dft_data.o dftatom.o drivers.o \
+OBJS =	c_dftatom.o \
+        constants.o dft.o dft_data.o dftatom.o drivers.o \
 	energies.o mesh.o mixings.o ode1d.o rdirac.o \
 	reigen.o rpoisson.o rschroed.o \
 	states.o types.o utils.o

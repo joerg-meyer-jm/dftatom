@@ -2,7 +2,19 @@
 
 # GFortran
 F90 = gfortran
-F90FLAGS = -Wall -std=f95 -Wextra -Wimplicit-interface -fPIC
+#F90FLAGS = -Wall -std=f95 -Wextra -Wimplicit-interface -fPIC
+# with
+#    GNU Fortran (Homebrew GCC 7.2.0) 7.2.0
+# this
+#    gfortran -Wall -std=f95 -Wextra -Wimplicit-interface -fPIC -g -fbounds-check -c c_dftatom.f90
+# triggers complaints:
+#    c_dftatom.f90:7:4:
+#
+#    use iso_c_binding, only: c_int, c_double, c_bool
+#       1
+#.  Error: Fortran 2003: ISO_C_BINDING module at (1)
+F90FLAGS = -Wall -Wextra -Wimplicit-interface -fPIC
+#
 # Debug flags:
 F90FLAGS += -g -fbounds-check
 # Release flags:
