@@ -1,0 +1,702 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Compilation &#8212; Cython 0.27a0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="https://media.readthedocs.org/css/badge_only.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.27a0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="https://media.readthedocs.org/javascript/jquery/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="https://media.readthedocs.org/javascript/jquery/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="https://media.readthedocs.org/javascript/underscore.js"></script>
+    <script type="text/javascript" src="https://media.readthedocs.org/javascript/doctools.js"></script>
+    <script type="text/javascript" src="https://media.readthedocs.org/javascript/readthedocs-doc-embed.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Language Basics" href="language_basics.html" />
+    <link rel="prev" title="Reference Guide" href="index.html" /> 
+  
+<!-- RTD Extra Head -->
+
+<!-- 
+Always link to the latest version, as canonical.
+http://docs.readthedocs.org/en/latest/canonical.html
+-->
+<link rel="canonical" href="http://cython.readthedocs.io/en/latest/src/reference/compilation.html" />
+
+<link rel="stylesheet" href="https://media.readthedocs.org/css/readthedocs-doc-embed.css" type="text/css" />
+
+<script type="text/javascript" src="../../_static/readthedocs-data.js"></script>
+
+<!-- Add page-specific data, which must exist in the page js, not global -->
+<script type="text/javascript">
+READTHEDOCS_DATA['page'] = 'src/reference/compilation' 		
+READTHEDOCS_DATA['source_suffix'] = '.rst'
+</script>
+
+<script type="text/javascript" src="../../_static/readthedocs-dynamic-include.js"></script>
+
+<!-- end RTD <extrahead> --></head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="language_basics.html" title="Language Basics"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="index.html" title="Reference Guide"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cython 0.27a0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Reference Guide</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="compilation">
+<span id="compilation-reference"></span><h1>Compilation<a class="headerlink" href="#compilation" title="Permalink to this headline">¶</a></h1>
+<p>Cython code, unlike Python, must be compiled.  This happens in two stages:</p>
+<blockquote>
+<div><ul class="simple">
+<li>A <code class="docutils literal"><span class="pre">.pyx</span></code> file is compiled by Cython to a <code class="docutils literal"><span class="pre">.c</span></code> file.</li>
+<li>The <code class="docutils literal"><span class="pre">.c</span></code> file is compiled by a C compiler to a <code class="docutils literal"><span class="pre">.so</span></code> file (or a
+<code class="docutils literal"><span class="pre">.pyd</span></code> file on Windows)</li>
+</ul>
+</div></blockquote>
+<p>The following sub-sections describe several ways to build your
+extension modules, and how to pass directives to the Cython compiler.</p>
+<div class="section" id="compiling-from-the-command-line">
+<h2>Compiling from the command line<a class="headerlink" href="#compiling-from-the-command-line" title="Permalink to this headline">¶</a></h2>
+<p>Run the Cython compiler command with your options and list of <code class="docutils literal"><span class="pre">.pyx</span></code>
+files to generate.  For example:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="err">$</span> <span class="n">cython</span> <span class="o">-</span><span class="n">a</span> <span class="n">yourmod</span><span class="o">.</span><span class="n">pyx</span>
+</pre></div>
+</div>
+<p>This creates a <code class="docutils literal"><span class="pre">yourmod.c</span></code> file, and the <code class="docutils literal"><span class="pre">-a</span></code> switch produces an
+annotated html file of the source code.  Pass the <code class="docutils literal"><span class="pre">-h</span></code> flag for a
+complete list of supported flags.</p>
+<p>Compiling your <code class="docutils literal"><span class="pre">.c</span></code> files will vary depending on your operating
+system.  Python documentation for writing extension modules should
+have some details for your system.  Here we give an example on a Linux
+system:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="err">$</span> <span class="n">gcc</span> <span class="o">-</span><span class="n">shared</span> <span class="o">-</span><span class="n">pthread</span> <span class="o">-</span><span class="n">fPIC</span> <span class="o">-</span><span class="n">fwrapv</span> <span class="o">-</span><span class="n">O2</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">fno</span><span class="o">-</span><span class="n">strict</span><span class="o">-</span><span class="n">aliasing</span> \
+      <span class="o">-</span><span class="n">I</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">include</span><span class="o">/</span><span class="n">python2</span><span class="o">.</span><span class="mf">7</span> <span class="o">-</span><span class="n">o</span> <span class="n">yourmod</span><span class="o">.</span><span class="n">so</span> <span class="n">yourmod</span><span class="o">.</span><span class="n">c</span>
+</pre></div>
+</div>
+<p>[<code class="docutils literal"><span class="pre">gcc</span></code> will need to have paths to your included header files and
+paths to libraries you need to link with]</p>
+<p>A <code class="docutils literal"><span class="pre">yourmod.so</span></code> file is now in the same directory and your module,
+<code class="docutils literal"><span class="pre">yourmod</span></code>, is available for you to import as you normally would.</p>
+</div>
+<div class="section" id="compiling-with-distutils">
+<h2>Compiling with <code class="docutils literal"><span class="pre">distutils</span></code><a class="headerlink" href="#compiling-with-distutils" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">distutils</span></code> package is part of the standard library.  It is the standard
+way of building Python packages, including native extension modules.  The
+following example configures the build for a Cython file called <em>hello.pyx</em>.
+First, create a <code class="docutils literal"><span class="pre">setup.py</span></code> script:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="k">from</span> <span class="nn">distutils.core</span> <span class="k">import</span> <span class="n">setup</span>
+<span class="k">from</span> <span class="nn">Cython.Build</span> <span class="k">import</span> <span class="n">cythonize</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;My hello app&quot;</span><span class="p">,</span>
+    <span class="n">ext_modules</span> <span class="o">=</span> <span class="n">cythonize</span><span class="p">(</span><span class="s">&#39;hello.pyx&#39;</span><span class="p">),</span>  <span class="c"># accepts a glob pattern</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, run the command <code class="docutils literal"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">build_ext</span> <span class="pre">--inplace</span></code> in your
+system&#8217;s command shell and you are done.  Import your new extension
+module into your python shell or script as normal.</p>
+<p>The <code class="docutils literal"><span class="pre">cythonize</span></code> command also allows for multi-threaded compilation and
+dependency resolution.  Recompilation will be skipped if the target file
+is up to date with its main source file and dependencies.</p>
+<div class="section" id="configuring-the-c-build">
+<h3>Configuring the C-Build<a class="headerlink" href="#configuring-the-c-build" title="Permalink to this headline">¶</a></h3>
+<p>If you have include files in non-standard places you can pass an
+<code class="docutils literal"><span class="pre">include_path</span></code> parameter to <code class="docutils literal"><span class="pre">cythonize</span></code>:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="k">from</span> <span class="nn">distutils.core</span> <span class="k">import</span> <span class="n">setup</span>
+<span class="k">from</span> <span class="nn">Cython.Build</span> <span class="k">import</span> <span class="n">cythonize</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;My hello app&quot;</span><span class="p">,</span>
+    <span class="n">ext_modules</span> <span class="o">=</span> <span class="n">cythonize</span><span class="p">(</span><span class="s">&quot;src/*.pyx&quot;</span><span class="p">,</span> <span class="n">include_path</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">]),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Often, Python packages that offer a C-level API provide a way to find
+the necessary include files, e.g. for NumPy:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="n">include_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">get_include</span><span class="p">()]</span>
+</pre></div>
+</div>
+<p>Note for Numpy users.  Despite this, you will still get warnings like the
+following from the compiler, because Cython is using a deprecated Numpy API:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="o">.../</span><span class="k">include</span><span class="o">/</span><span class="n">numpy</span><span class="o">/</span><span class="n">npy_1_7_deprecated_api</span><span class="o">.</span><span class="n">h</span><span class="p">:</span><span class="mf">15</span><span class="p">:</span><span class="mf">2</span><span class="p">:</span> <span class="n">warning</span><span class="p">:</span> <span class="c">#warning &quot;Using deprecated NumPy API, disable it by &quot; &quot;#defining NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION&quot; [-Wcpp]</span>
+</pre></div>
+</div>
+<p>For the time being, it is just a warning that you can ignore.</p>
+<p>If you need to specify compiler options, libraries to link with or other
+linker options you will need to create <code class="docutils literal"><span class="pre">Extension</span></code> instances manually
+(note that glob syntax can still be used to specify multiple extensions
+in one line):</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="k">from</span> <span class="nn">distutils.core</span> <span class="k">import</span> <span class="n">setup</span>
+<span class="k">from</span> <span class="nn">distutils.extension</span> <span class="k">import</span> <span class="n">Extension</span>
+<span class="k">from</span> <span class="nn">Cython.Build</span> <span class="k">import</span> <span class="n">cythonize</span>
+
+<span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Extension</span><span class="p">(</span><span class="s">&quot;primes&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;primes.pyx&quot;</span><span class="p">],</span>
+        <span class="n">include_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+        <span class="n">libraries</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+        <span class="n">library_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">]),</span>
+    <span class="c"># Everything but primes.pyx is included here.</span>
+    <span class="n">Extension</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;*.pyx&quot;</span><span class="p">],</span>
+        <span class="n">include_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+        <span class="n">libraries</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+        <span class="n">library_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">]),</span>
+<span class="p">]</span>
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;My hello app&quot;</span><span class="p">,</span>
+    <span class="n">ext_modules</span> <span class="o">=</span> <span class="n">cythonize</span><span class="p">(</span><span class="n">extensions</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that when using setuptools, you should import it before Cython as
+setuptools may replace the <code class="docutils literal"><span class="pre">Extension</span></code> class in distutils.  Otherwise,
+both might disagree about the class to use here.</p>
+<p>If your options are static (for example you do not need to call a tool like
+<code class="docutils literal"><span class="pre">pkg-config</span></code> to determine them) you can also provide them directly in your
+.pyx or .pxd source file using a special comment block at the start of the file:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="c"># distutils: libraries = spam eggs</span>
+<span class="c"># distutils: include_dirs = /opt/food/include</span>
+</pre></div>
+</div>
+<p>If you cimport multiple .pxd files defining libraries, then Cython
+merges the list of libraries, so this works as expected (similarly
+with other options, like <code class="docutils literal"><span class="pre">include_dirs</span></code> above).</p>
+<p>If you have some C files that have been wrapped with Cython and you want to
+compile them into your extension, you can define the distutils <code class="docutils literal"><span class="pre">sources</span></code>
+parameter:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="c"># distutils: sources = helper.c, another_helper.c</span>
+</pre></div>
+</div>
+<p>Note that these sources are added to the list of sources of the current
+extension module.  Spelling this out in the <code class="file docutils literal"><span class="pre">setup.py</span></code> file looks
+as follows:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="k">from</span> <span class="nn">distutils.core</span> <span class="k">import</span> <span class="n">setup</span>
+<span class="k">from</span> <span class="nn">Cython.Build</span> <span class="k">import</span> <span class="n">cythonize</span>
+<span class="k">from</span> <span class="nn">distutils.extension</span> <span class="k">import</span> <span class="n">Extension</span>
+
+<span class="n">sourcefiles</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;example.pyx&#39;</span><span class="p">,</span> <span class="s">&#39;helper.c&#39;</span><span class="p">,</span> <span class="s">&#39;another_helper.c&#39;</span><span class="p">]</span>
+
+<span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">Extension</span><span class="p">(</span><span class="s">&quot;example&quot;</span><span class="p">,</span> <span class="n">sourcefiles</span><span class="p">)]</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">ext_modules</span> <span class="o">=</span> <span class="n">cythonize</span><span class="p">(</span><span class="n">extensions</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="xref py py-class docutils literal"><span class="pre">Extension</span></code> class takes many options, and a fuller explanation can
+be found in the <a class="reference external" href="http://docs.python.org/extending/building.html">distutils documentation</a>. Some useful options to know about
+are <code class="docutils literal"><span class="pre">include_dirs</span></code>, <code class="docutils literal"><span class="pre">libraries</span></code>, and <code class="docutils literal"><span class="pre">library_dirs</span></code> which specify where
+to find the <code class="docutils literal"><span class="pre">.h</span></code> and library files when linking to external libraries.</p>
+<p>Sometimes this is not enough and you need finer customization of the
+distutils <code class="xref py py-class docutils literal"><span class="pre">Extension</span></code>.
+To do this, you can provide a custom function <code class="docutils literal"><span class="pre">create_extension</span></code>
+to create the final <code class="xref py py-class docutils literal"><span class="pre">Extension</span></code> object after Cython has processed
+the sources, dependencies and <code class="docutils literal"><span class="pre">#</span> <span class="pre">distutils</span></code> directives but before the
+file is actually Cythonized.
+This function takes 2 arguments <code class="docutils literal"><span class="pre">template</span></code> and <code class="docutils literal"><span class="pre">kwds</span></code>, where
+<code class="docutils literal"><span class="pre">template</span></code> is the <code class="xref py py-class docutils literal"><span class="pre">Extension</span></code> object given as input to Cython
+and <code class="docutils literal"><span class="pre">kwds</span></code> is a <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><code class="xref py py-class docutils literal"><span class="pre">dict</span></code></a> with all keywords which should be used
+to create the <code class="xref py py-class docutils literal"><span class="pre">Extension</span></code>.
+The function <code class="docutils literal"><span class="pre">create_extension</span></code> must return a 2-tuple
+<code class="docutils literal"><span class="pre">(extension,</span> <span class="pre">metadata)</span></code>, where <code class="docutils literal"><span class="pre">extension</span></code> is the created
+<code class="xref py py-class docutils literal"><span class="pre">Extension</span></code> and <code class="docutils literal"><span class="pre">metadata</span></code> is metadata which will be written
+as JSON at the top of the generated C files. This metadata is only used
+for debugging purposes, so you can put whatever you want in there
+(as long as it can be converted to JSON).
+The default function (defined in <code class="docutils literal"><span class="pre">Cython.Build.Dependencies</span></code>) is:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">default_create_extension</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">kwds</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&#39;depends&#39;</span> <span class="ow">in</span> <span class="n">kwds</span><span class="p">:</span>
+        <span class="n">include_dirs</span> <span class="o">=</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;include_dirs&#39;</span><span class="p">,</span> <span class="p">[])</span> <span class="o">+</span> <span class="p">[</span><span class="s">&quot;.&quot;</span><span class="p">]</span>
+        <span class="n">depends</span> <span class="o">=</span> <span class="n">resolve_depends</span><span class="p">(</span><span class="n">kwds</span><span class="p">[</span><span class="s">&#39;depends&#39;</span><span class="p">],</span> <span class="n">include_dirs</span><span class="p">)</span>
+        <span class="n">kwds</span><span class="p">[</span><span class="s">&#39;depends&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">depends</span> <span class="o">+</span> <span class="n">template</span><span class="o">.</span><span class="n">depends</span><span class="p">))</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">__class__</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">distutils</span><span class="o">=</span><span class="n">kwds</span><span class="p">,</span> <span class="n">module_name</span><span class="o">=</span><span class="n">kwds</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In case that you pass a string instead of an <code class="xref py py-class docutils literal"><span class="pre">Extension</span></code> to
+<code class="docutils literal"><span class="pre">cythonize()</span></code>, the <code class="docutils literal"><span class="pre">template</span></code> will be an <code class="xref py py-class docutils literal"><span class="pre">Extension</span></code> without
+sources. For example, if you do <code class="docutils literal"><span class="pre">cythonize(&quot;*.pyx&quot;)</span></code>,
+the <code class="docutils literal"><span class="pre">template</span></code> will be <code class="docutils literal"><span class="pre">Extension(name=&quot;*.pyx&quot;,</span> <span class="pre">sources=[])</span></code>.</p>
+<p>Just as an example, this adds <code class="docutils literal"><span class="pre">mylib</span></code> as library to every extension:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="k">from</span> <span class="nn">Cython.Build.Dependencies</span> <span class="k">import</span> <span class="n">default_create_extension</span>
+
+<span class="k">def</span> <span class="nf">my_create_extension</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">kwds</span><span class="p">):</span>
+    <span class="n">libs</span> <span class="o">=</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;libraries&#39;</span><span class="p">,</span> <span class="p">[])</span> <span class="o">+</span> <span class="p">[</span><span class="s">&quot;mylib&quot;</span><span class="p">]</span>
+    <span class="n">kwds</span><span class="p">[</span><span class="s">&#39;libraries&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">libs</span>
+    <span class="k">return</span> <span class="n">default_create_extension</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">kwds</span><span class="p">)</span>
+
+<span class="n">ext_modules</span> <span class="o">=</span> <span class="n">cythonize</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">create_extension</span><span class="o">=</span><span class="n">my_create_extension</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you Cythonize in parallel (using the <code class="docutils literal"><span class="pre">nthreads</span></code> argument),
+then the argument to <code class="docutils literal"><span class="pre">create_extension</span></code> must be pickleable.
+In particular, it cannot be a lambda function.</p>
+</div>
+</div>
+<div class="section" id="distributing-cython-modules">
+<h3>Distributing Cython modules<a class="headerlink" href="#distributing-cython-modules" title="Permalink to this headline">¶</a></h3>
+<p>It is strongly recommended that you distribute the generated <code class="docutils literal"><span class="pre">.c</span></code> files as well
+as your Cython sources, so that users can install your module without needing
+to have Cython available.</p>
+<p>It is also recommended that Cython compilation not be enabled by default in the
+version you distribute. Even if the user has Cython installed, he/she probably
+doesn&#8217;t want to use it just to install your module. Also, the installed version
+may not be the same one you used, and may not compile your sources correctly.</p>
+<p>This simply means that the <code class="file docutils literal"><span class="pre">setup.py</span></code> file that you ship with will just
+be a normal distutils file on the generated <cite>.c</cite> files, for the basic example
+we would have instead:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="k">from</span> <span class="nn">distutils.core</span> <span class="k">import</span> <span class="n">setup</span>
+<span class="k">from</span> <span class="nn">distutils.extension</span> <span class="k">import</span> <span class="n">Extension</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">ext_modules</span> <span class="o">=</span> <span class="p">[</span><span class="n">Extension</span><span class="p">(</span><span class="s">&quot;example&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;example.c&quot;</span><span class="p">])]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>This is easy to combine with <code class="xref py py-func docutils literal"><span class="pre">cythonize()</span></code> by changing the file extension
+of the extension module sources:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="k">from</span> <span class="nn">distutils.core</span> <span class="k">import</span> <span class="n">setup</span>
+<span class="k">from</span> <span class="nn">distutils.extension</span> <span class="k">import</span> <span class="n">Extension</span>
+
+<span class="n">USE_CYTHON</span> <span class="o">=</span> <span class="o">...</span>   <span class="c"># command line option, try-import, ...</span>
+
+<span class="n">ext</span> <span class="o">=</span> <span class="s">&#39;.pyx&#39;</span> <span class="k">if</span> <span class="n">USE_CYTHON</span> <span class="k">else</span> <span class="s">&#39;.c&#39;</span>
+
+<span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">Extension</span><span class="p">(</span><span class="s">&quot;example&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;example&quot;</span><span class="o">+</span><span class="n">ext</span><span class="p">])]</span>
+
+<span class="k">if</span> <span class="n">USE_CYTHON</span><span class="p">:</span>
+    <span class="k">from</span> <span class="nn">Cython.Build</span> <span class="k">import</span> <span class="n">cythonize</span>
+    <span class="n">extensions</span> <span class="o">=</span> <span class="n">cythonize</span><span class="p">(</span><span class="n">extensions</span><span class="p">)</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">ext_modules</span> <span class="o">=</span> <span class="n">extensions</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>If you have many extensions and want to avoid the additional complexity in the
+declarations, you can declare them with their normal Cython sources and then
+call the following function instead of <code class="docutils literal"><span class="pre">cythonize()</span></code> to adapt the sources
+list in the Extensions when not using Cython:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">os.path</span>
+
+<span class="k">def</span> <span class="nf">no_cythonize</span><span class="p">(</span><span class="n">extensions</span><span class="p">,</span> <span class="o">**</span><span class="n">_ignore</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">extension</span> <span class="ow">in</span> <span class="n">extensions</span><span class="p">:</span>
+        <span class="n">sources</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sfile</span> <span class="ow">in</span> <span class="n">extension</span><span class="o">.</span><span class="n">sources</span><span class="p">:</span>
+            <span class="n">path</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">sfile</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;.pyx&#39;</span><span class="p">,</span> <span class="s">&#39;.py&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">extension</span><span class="o">.</span><span class="n">language</span> <span class="o">==</span> <span class="s">&#39;c++&#39;</span><span class="p">:</span>
+                    <span class="n">ext</span> <span class="o">=</span> <span class="s">&#39;.cpp&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ext</span> <span class="o">=</span> <span class="s">&#39;.c&#39;</span>
+                <span class="n">sfile</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="n">ext</span>
+            <span class="n">sources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sfile</span><span class="p">)</span>
+        <span class="n">extension</span><span class="o">.</span><span class="n">sources</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">sources</span>
+    <span class="k">return</span> <span class="n">extensions</span>
+</pre></div>
+</div>
+<p>Another option is to make Cython a setup dependency of your system and use
+Cython&#8217;s build_ext module which runs <code class="docutils literal"><span class="pre">cythonize</span></code> as part of the build process:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="n">setup</span><span class="p">(</span>
+    <span class="n">setup_requires</span><span class="o">=</span><span class="p">[</span>
+        <span class="s">&#39;cython&gt;=0.x&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">Extension</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;*.pyx&quot;</span><span class="p">])],</span>
+    <span class="n">cmdclass</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;build_ext&#39;</span><span class="p">:</span> <span class="n">Cython</span><span class="o">.</span><span class="n">Build</span><span class="o">.</span><span class="n">build_ext</span><span class="p">},</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to expose the C-level interface of your library for other
+libraries to cimport from, use package_data to install the <code class="docutils literal"><span class="pre">.pxd</span></code> files,
+e.g.:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="n">setup</span><span class="p">(</span>
+    <span class="n">package_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;my_package&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;*.pxd&#39;</span><span class="p">],</span>
+        <span class="s">&#39;my_package/sub_package&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;*.pxd&#39;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>These <code class="docutils literal"><span class="pre">.pxd</span></code> files need not have corresponding <code class="docutils literal"><span class="pre">.pyx</span></code>
+modules if they contain purely declarations of external libraries.</p>
+</div>
+</div>
+<div class="section" id="compiling-with-pyximport">
+<h2>Compiling with <code class="xref py py-mod docutils literal"><span class="pre">pyximport</span></code><a class="headerlink" href="#compiling-with-pyximport" title="Permalink to this headline">¶</a></h2>
+<p>For building Cython modules during development without explicitly
+running <code class="docutils literal"><span class="pre">setup.py</span></code> after each change, you can use <code class="xref py py-mod docutils literal"><span class="pre">pyximport</span></code>:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">import</span> <span class="nn">pyximport</span><span class="p">;</span> <span class="n">pyximport</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">import</span> <span class="nn">helloworld</span>
+<span class="n">Hello</span> <span class="n">World</span>
+</pre></div>
+</div>
+<p>This allows you to automatically run Cython on every <code class="docutils literal"><span class="pre">.pyx</span></code> that
+Python is trying to import.  You should use this for simple Cython
+builds only where no extra C libraries and no special building setup
+is needed.</p>
+<p>It is also possible to compile new <code class="docutils literal"><span class="pre">.py</span></code> modules that are being
+imported (including the standard library and installed packages).  For
+using this feature, just tell that to <code class="xref py py-mod docutils literal"><span class="pre">pyximport</span></code>:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">pyximport</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="n">pyimport</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the case that Cython fails to compile a Python module, <code class="xref py py-mod docutils literal"><span class="pre">pyximport</span></code>
+will fall back to loading the source modules instead.</p>
+<p>Note that it is not recommended to let <code class="xref py py-mod docutils literal"><span class="pre">pyximport</span></code> build code
+on end user side as it hooks into their import system.  The best way
+to cater for end users is to provide pre-built binary packages in the
+<a class="reference external" href="https://wheel.readthedocs.io/">wheel</a> packaging format.</p>
+</div>
+<div class="section" id="compiling-with-cython-inline">
+<h2>Compiling with <code class="docutils literal"><span class="pre">cython.inline</span></code><a class="headerlink" href="#compiling-with-cython-inline" title="Permalink to this headline">¶</a></h2>
+<p>One can also compile Cython in a fashion similar to SciPy&#8217;s <code class="docutils literal"><span class="pre">weave.inline</span></code>.
+For example:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">import</span> <span class="nn">cython</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<span class="o">...</span>     <span class="n">ret</span> <span class="o">=</span> <span class="n">cython</span><span class="o">.</span><span class="n">inline</span><span class="p">(</span><span class="s">&quot;return a+b&quot;</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">3</span><span class="p">)</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>Unbound variables are automatically pulled from the surrounding local
+and global scopes, and the result of the compilation is cached for
+efficient re-use.</p>
+</div>
+<div class="section" id="compiling-with-sage">
+<h2>Compiling with Sage<a class="headerlink" href="#compiling-with-sage" title="Permalink to this headline">¶</a></h2>
+<p>The Sage notebook allows transparently editing and compiling Cython
+code simply by typing <code class="docutils literal"><span class="pre">%cython</span></code> at the top of a cell and evaluate
+it. Variables and functions defined in a Cython cell are imported into the
+running session.  Please check <a class="reference external" href="http://www.sagemath.org/doc/">Sage documentation</a> for details.</p>
+<p>You can tailor the behavior of the Cython compiler by specifying the
+directives below.</p>
+</div>
+<div class="section" id="compiler-directives">
+<span id="id1"></span><h2>Compiler directives<a class="headerlink" href="#compiler-directives" title="Permalink to this headline">¶</a></h2>
+<p>Compiler directives are instructions which affect the behavior of
+Cython code.  Here is the list of currently supported directives:</p>
+<dl class="docutils">
+<dt><code class="docutils literal"><span class="pre">binding</span></code> (True / False)</dt>
+<dd>Controls whether free functions behave more like Python&#8217;s CFunctions
+(e.g. <a class="reference external" href="https://docs.python.org/3/library/functions.html#len" title="(in Python v3.6)"><code class="xref py py-func docutils literal"><span class="pre">len()</span></code></a>) or, when set to True, more like Python&#8217;s functions.
+When enabled, functions will bind to an instance when looked up as a
+class attribute (hence the name) and will emulate the attributes
+of Python functions, including introspections like argument names and
+annotations.
+Default is False.</dd>
+<dt><code class="docutils literal"><span class="pre">boundscheck</span></code>  (True / False)</dt>
+<dd>If set to False, Cython is free to assume that indexing operations
+([]-operator) in the code will not cause any IndexErrors to be
+raised. Lists, tuples, and strings are affected only if the index
+can be determined to be non-negative (or if <code class="docutils literal"><span class="pre">wraparound</span></code> is False).
+Conditions
+which would normally trigger an IndexError may instead cause
+segfaults or data corruption if this is set to False.
+Default is True.</dd>
+<dt><code class="docutils literal"><span class="pre">wraparound</span></code>  (True / False)</dt>
+<dd>In Python arrays can be indexed relative to the end. For example
+A[-1] indexes the last value of a list. In C negative indexing is
+not supported. If set to False, Cython will neither check for nor
+correctly handle negative indices, possibly causing segfaults or
+data corruption.
+Default is True.</dd>
+<dt><code class="docutils literal"><span class="pre">initializedcheck</span></code> (True / False)</dt>
+<dd>If set to True, Cython checks that a memoryview is initialized
+whenever its elements are accessed or assigned to. Setting this
+to False disables these checks.
+Default is True.</dd>
+<dt><code class="docutils literal"><span class="pre">nonecheck</span></code>  (True / False)</dt>
+<dd>If set to False, Cython is free to assume that native field
+accesses on variables typed as an extension type, or buffer
+accesses on a buffer variable, never occurs when the variable is
+set to <code class="docutils literal"><span class="pre">None</span></code>. Otherwise a check is inserted and the
+appropriate exception is raised. This is off by default for
+performance reasons.  Default is False.</dd>
+<dt><code class="docutils literal"><span class="pre">overflowcheck</span></code> (True / False)</dt>
+<dd>If set to True, raise errors on overflowing C integer arithmetic
+operations.  Incurs a modest runtime penalty, but is much faster than
+using Python ints.  Default is False.</dd>
+<dt><code class="docutils literal"><span class="pre">overflowcheck.fold</span></code> (True / False)</dt>
+<dd>If set to True, and overflowcheck is True, check the overflow bit for
+nested, side-effect-free arithmetic expressions once rather than at every
+step.  Depending on the compiler, architecture, and optimization settings,
+this may help or hurt performance.  A simple suite of benchmarks can be
+found in <code class="docutils literal"><span class="pre">Demos/overflow_perf.pyx</span></code>.  Default is True.</dd>
+<dt><code class="docutils literal"><span class="pre">embedsignature</span></code> (True / False)</dt>
+<dd>If set to True, Cython will embed a textual copy of the call
+signature in the docstring of all Python visible functions and
+classes. Tools like IPython and epydoc can thus display the
+signature, which cannot otherwise be retrieved after
+compilation.  Default is False.</dd>
+<dt><code class="docutils literal"><span class="pre">cdivision</span></code> (True / False)</dt>
+<dd>If set to False, Cython will adjust the remainder and quotient
+operators C types to match those of Python ints (which differ when
+the operands have opposite signs) and raise a
+<code class="docutils literal"><span class="pre">ZeroDivisionError</span></code> when the right operand is 0. This has up to
+a 35% speed penalty. If set to True, no checks are performed.  See
+<a class="reference external" href="https://github.com/cython/cython/wiki/enhancements-division">CEP 516</a>.  Default
+is False.</dd>
+<dt><code class="docutils literal"><span class="pre">cdivision_warnings</span></code> (True / False)</dt>
+<dd>If set to True, Cython will emit a runtime warning whenever
+division is performed with negative operands.  See <a class="reference external" href="https://github.com/cython/cython/wiki/enhancements-division">CEP 516</a>.  Default is
+False.</dd>
+<dt><code class="docutils literal"><span class="pre">always_allow_keywords</span></code> (True / False)</dt>
+<dd>Avoid the <code class="docutils literal"><span class="pre">METH_NOARGS</span></code> and <code class="docutils literal"><span class="pre">METH_O</span></code> when constructing
+functions/methods which take zero or one arguments. Has no effect
+on special methods and functions with more than one argument. The
+<code class="docutils literal"><span class="pre">METH_NOARGS</span></code> and <code class="docutils literal"><span class="pre">METH_O</span></code> signatures provide faster
+calling conventions but disallow the use of keywords.</dd>
+<dt><code class="docutils literal"><span class="pre">profile</span></code> (True / False)</dt>
+<dd>Write hooks for Python profilers into the compiled C code.  Default
+is False.</dd>
+<dt><code class="docutils literal"><span class="pre">linetrace</span></code> (True / False)</dt>
+<dd>Write line tracing hooks for Python profilers or coverage reporting
+into the compiled C code.  This also enables profiling.  Default is
+False.  Note that the generated module will not actually use line
+tracing, unless you additionally pass the C macro definition
+<code class="docutils literal"><span class="pre">CYTHON_TRACE=1</span></code> to the C compiler (e.g. using the distutils option
+<code class="docutils literal"><span class="pre">define_macros</span></code>).  Define <code class="docutils literal"><span class="pre">CYTHON_TRACE_NOGIL=1</span></code> to also include
+<code class="docutils literal"><span class="pre">nogil</span></code> functions and sections.</dd>
+<dt><code class="docutils literal"><span class="pre">infer_types</span></code> (True / False)</dt>
+<dd>Infer types of untyped variables in function bodies. Default is
+None, indicating that only safe (semantically-unchanging) inferences
+are allowed.
+In particular, inferring <em>integral</em> types for variables <em>used in arithmetic
+expressions</em> is considered unsafe (due to possible overflow) and must be
+explicitly requested.</dd>
+<dt><code class="docutils literal"><span class="pre">language_level</span></code> (2/3)</dt>
+<dd>Globally set the Python language level to be used for module
+compilation.  Default is compatibility with Python 2.  To enable
+Python 3 source code semantics, set this to 3 at the start of a
+module or pass the &#8220;-3&#8221; command line option to the compiler.
+Note that cimported and included source files inherit this
+setting from the module being compiled, unless they explicitly
+set their own language level.</dd>
+<dt><code class="docutils literal"><span class="pre">c_string_type</span></code> (bytes / str / unicode)</dt>
+<dd>Globally set the type of an implicit coercion from char* or std::string.</dd>
+<dt><code class="docutils literal"><span class="pre">c_string_encoding</span></code> (ascii, default, utf-8, etc.)</dt>
+<dd>Globally set the encoding to use when implicitly coercing char* or std:string
+to a unicode object.  Coercion from a unicode object to C type is only allowed
+when set to <code class="docutils literal"><span class="pre">ascii</span></code> or <code class="docutils literal"><span class="pre">default</span></code>, the latter being utf-8 in Python 3 and
+nearly-always ascii in Python 2.</dd>
+<dt><code class="docutils literal"><span class="pre">type_version_tag</span></code> (True / False)</dt>
+<dd>Enables the attribute cache for extension types in CPython by setting the
+type flag <code class="docutils literal"><span class="pre">Py_TPFLAGS_HAVE_VERSION_TAG</span></code>.  Default is True, meaning that
+the cache is enabled for Cython implemented types.  To disable it
+explicitly in the rare cases where a type needs to juggle with its <code class="docutils literal"><span class="pre">tp_dict</span></code>
+internally without paying attention to cache consistency, this option can
+be set to False.</dd>
+<dt><code class="docutils literal"><span class="pre">unraisable_tracebacks</span></code> (True / False)</dt>
+<dd>Whether to print tracebacks when suppressing unraisable exceptions.</dd>
+</dl>
+<div class="section" id="configurable-optimisations">
+<h3>Configurable optimisations<a class="headerlink" href="#configurable-optimisations" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt><code class="docutils literal"><span class="pre">optimize.use_switch</span></code> (True / False)</dt>
+<dd>Whether to expand chained if-else statements (including statements like
+<code class="docutils literal"><span class="pre">if</span> <span class="pre">x</span> <span class="pre">==</span> <span class="pre">1</span> <span class="pre">or</span> <span class="pre">x</span> <span class="pre">==</span> <span class="pre">2:</span></code>) into C switch statements.  This can have performance
+benefits if there are lots of values but cause compiler errors if there are any
+duplicate values (which may not be detectable at Cython compile time for all
+C constants).  Default is True.</dd>
+<dt><code class="docutils literal"><span class="pre">optimize.unpack_method_calls</span></code> (True / False)</dt>
+<dd>Cython can generate code that optimistically checks for Python method objects
+at call time and unpacks the underlying function to call it directly.  This
+can substantially speed up method calls, especially for builtins, but may also
+have a slight negative performance impact in some cases where the guess goes
+completely wrong.
+Disabling this option can also reduce the code size.  Default is True.</dd>
+</dl>
+</div>
+<div class="section" id="how-to-set-directives">
+<h3>How to set directives<a class="headerlink" href="#how-to-set-directives" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="globally">
+<h4>Globally<a class="headerlink" href="#globally" title="Permalink to this headline">¶</a></h4>
+<p>One can set compiler directives through a special header comment at the top of the file, like this:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="c">#!python</span>
+<span class="c">#cython: language_level=3, boundscheck=False</span>
+</pre></div>
+</div>
+<p>The comment must appear before any code (but can appear after other
+comments or whitespace).</p>
+<p>One can also pass a directive on the command line by using the -X switch:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="err">$</span> <span class="n">cython</span> <span class="o">-</span><span class="n">X</span> <span class="n">boundscheck</span><span class="o">=</span><span class="bp">True</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Directives passed on the command line will override directives set in
+header comments.</p>
+</div>
+<div class="section" id="locally">
+<h4>Locally<a class="headerlink" href="#locally" title="Permalink to this headline">¶</a></h4>
+<p>For local blocks, you need to cimport the special builtin <code class="docutils literal"><span class="pre">cython</span></code>
+module:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="c">#!python</span>
+<span class="k">cimport</span> <span class="nn">cython</span>
+</pre></div>
+</div>
+<p>Then you can use the directives either as decorators or in a with
+statement, like this:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="c">#!python</span>
+<span class="nd">@cython</span><span class="o">.</span><span class="n">boundscheck</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span> <span class="c"># turn off boundscheck for this function</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="o">...</span>
+    <span class="c"># turn it temporarily on again for this block</span>
+    <span class="k">with</span> <span class="n">cython</span><span class="o">.</span><span class="n">boundscheck</span><span class="p">(</span><span class="bp">True</span><span class="p">):</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">These two methods of setting directives are <strong>not</strong>
+affected by overriding the directive on the command-line using the
+-X option.</p>
+</div>
+</div>
+<div class="section" id="in-setup-py">
+<h4>In <code class="file docutils literal"><span class="pre">setup.py</span></code><a class="headerlink" href="#in-setup-py" title="Permalink to this headline">¶</a></h4>
+<p>Compiler directives can also be set in the <code class="file docutils literal"><span class="pre">setup.py</span></code> file by passing a keyword
+argument to <code class="docutils literal"><span class="pre">cythonize</span></code>:</p>
+<div class="highlight-cython"><div class="highlight"><pre><span></span><span class="k">from</span> <span class="nn">distutils.core</span> <span class="k">import</span> <span class="n">setup</span>
+<span class="k">from</span> <span class="nn">Cython.Build</span> <span class="k">import</span> <span class="n">cythonize</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;My hello app&quot;</span><span class="p">,</span>
+    <span class="n">ext_modules</span> <span class="o">=</span> <span class="n">cythonize</span><span class="p">(</span><span class="s">&#39;hello.pyx&#39;</span><span class="p">,</span> <span class="n">compiler_directives</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;embedsignature&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>This will override the default directives as specified in the <code class="docutils literal"><span class="pre">compiler_directives</span></code> dictionary.
+Note that explicit per-file or local directives as explained above take precedence over the
+values passed to <code class="docutils literal"><span class="pre">cythonize</span></code>.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/cythonlogo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Compilation</a><ul>
+<li><a class="reference internal" href="#compiling-from-the-command-line">Compiling from the command line</a></li>
+<li><a class="reference internal" href="#compiling-with-distutils">Compiling with <code class="docutils literal"><span class="pre">distutils</span></code></a><ul>
+<li><a class="reference internal" href="#configuring-the-c-build">Configuring the C-Build</a></li>
+<li><a class="reference internal" href="#distributing-cython-modules">Distributing Cython modules</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#compiling-with-pyximport">Compiling with <code class="docutils literal"><span class="pre">pyximport</span></code></a></li>
+<li><a class="reference internal" href="#compiling-with-cython-inline">Compiling with <code class="docutils literal"><span class="pre">cython.inline</span></code></a></li>
+<li><a class="reference internal" href="#compiling-with-sage">Compiling with Sage</a></li>
+<li><a class="reference internal" href="#compiler-directives">Compiler directives</a><ul>
+<li><a class="reference internal" href="#configurable-optimisations">Configurable optimisations</a></li>
+<li><a class="reference internal" href="#how-to-set-directives">How to set directives</a><ul>
+<li><a class="reference internal" href="#globally">Globally</a></li>
+<li><a class="reference internal" href="#locally">Locally</a></li>
+<li><a class="reference internal" href="#in-setup-py">In <code class="file docutils literal"><span class="pre">setup.py</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Reference Guide</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="language_basics.html"
+                        title="next chapter">Language Basics</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/src/reference/compilation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="language_basics.html" title="Language Basics"
+             >next</a></li>
+        <li class="right" >
+          <a href="index.html" title="Reference Guide"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cython 0.27a0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Reference Guide</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Stefan Behnel, Robert Bradshaw, Dag Sverre Seljebotn, Greg Ewing, William Stein, Gabriel Gellner, et al..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-6139100-3");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+  </body>
+</html>
