@@ -1,0 +1,2829 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html dir='ltr' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+<link href='https://www.blogger.com/static/v1/widgets/3332739511-widget_css_bundle.css' rel='stylesheet' type='text/css'/>
+<meta content='222271464485161' property='fb:app_id'/>
+<meta content='595114712' property='fb:admins'/>
+<meta content='PROGRAMMING INTERVIEWS' property='og:site_name'/>
+<meta content='article' property='og:type'/>
+<meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+<meta content='blogger' name='generator'/>
+<link href='http://tech-queries.blogspot.nl/favicon.ico' rel='icon' type='image/x-icon'/>
+<link href='http://tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html' rel='canonical'/>
+<link rel="alternate" type="application/atom+xml" title="PROGRAMMING INTERVIEWS - Atom" href="http://tech-queries.blogspot.com/feeds/posts/default" />
+<link rel="alternate" type="application/rss+xml" title="PROGRAMMING INTERVIEWS - RSS" href="http://tech-queries.blogspot.com/feeds/posts/default?alt=rss" />
+<link rel="service.post" type="application/atom+xml" title="PROGRAMMING INTERVIEWS - Atom" href="https://www.blogger.com/feeds/6038272452605714757/posts/default" />
+
+<link rel="alternate" type="application/atom+xml" title="PROGRAMMING INTERVIEWS - Atom" href="http://tech-queries.blogspot.com/feeds/9118956563711443570/comments/default" />
+<!--Can't find substitution for tag [blog.ieCssRetrofitLinks]-->
+<link href='https://plus.google.com/109333543971720464478' rel='publisher'/>
+<meta content='http://tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html' property='og:url'/>
+<meta content='Dynamic library dependency on Mac OS X' property='og:title'/>
+<meta content='Question:  We use ldd to find dependencies on Linux platform. Unfortunately, ldd doesn&#39;t work on Mac OS X. Which command line tool is equiva...' property='og:description'/>
+<!--[if IE]> <script> (function() { var html5 = ("abbr,article,aside,audio,canvas,datalist,details," + "figure,footer,header,hgroup,mark,menu,meter,nav,output," + "progress,section,time,video").split(','); for (var i = 0; i < html5.length; i++) { document.createElement(html5[i]); } try { document.execCommand('BackgroundImageCache', false, true); } catch(e) {} })(); </script> <![endif]-->
+<title>
+Dynamic library dependency on Mac OS X | PROGRAMMING INTERVIEWS</title>
+<style id='page-skin-1' type='text/css'><!--
+/*
+Theme Name: Box Tube
+Theme Style: Box Module WordPress Theme
+Theme URI: http://www.dezzain.com
+Description: Customized WordPress Theme With Customize And Optimize Widgetize Box Sidebar And Widgtize Footer
+Author: Richie K
+Author URI: http://www.dezzain.com
+.dp-highlighter
+{
+font-family: "Consolas", "Monaco", "Courier New", Courier, monospace;
+font-size: 12px;
+background-color: #E7E5DC;
+width: 99%;
+overflow: auto;
+margin: 18px 0 18px 0 !important;
+padding-top: 1px; /* adds a little border on top when controls are hidden */
+}
+/* clear styles */
+.dp-highlighter ol,
+.dp-highlighter ol li,
+.dp-highlighter ol li span
+{
+margin: 0;
+padding: 0;
+border: none;
+}
+.dp-highlighter a,
+.dp-highlighter a:hover
+{
+background: none;
+border: none;
+padding: 0;
+margin: 0;
+}
+.dp-highlighter .bar
+{
+padding-left: 45px;
+}
+.dp-highlighter.collapsed .bar,
+.dp-highlighter.nogutter .bar
+{
+padding-left: 0px;
+}
+.dp-highlighter ol
+{
+list-style: decimal; /* for ie */
+background-color: #fff;
+margin: 0px 0px 1px 45px !important; /* 1px bottom margin seems to fix occasional Firefox scrolling */
+padding: 0px;
+color: #5C5C5C;
+}
+.dp-highlighter.nogutter ol,
+.dp-highlighter.nogutter ol li
+{
+list-style: none !important;
+margin-left: 0px !important;
+}
+.dp-highlighter ol li,
+.dp-highlighter .columns div
+{
+list-style: decimal-leading-zero; /* better look for others, override cascade from OL */
+list-style-position: outside !important;
+border-left: 3px solid #6CE26C;
+background-color: #F8F8F8;
+color: #5C5C5C;
+padding: 0 3px 0 10px !important;
+margin: 0 !important;
+line-height: 19px;
+}
+.dp-highlighter.nogutter ol li,
+.dp-highlighter.nogutter .columns div
+{
+border: 0;
+}
+.dp-highlighter .columns
+{
+background-color: #F8F8F8;
+color: gray;
+overflow: hidden;
+width: 100%;
+}
+.dp-highlighter .columns div
+{
+padding-bottom: 5px;
+}
+.dp-highlighter ol li.alt
+{
+background-color: #FFF;
+color: inherit;
+}
+.dp-highlighter ol li span
+{
+color: black;
+background-color: inherit;
+}
+/* Adjust some properties when collapsed */
+.dp-highlighter.collapsed ol
+{
+margin: 0px;
+}
+.dp-highlighter.collapsed ol li
+{
+display: none;
+}
+/* Additional modifications when in print-view */
+.dp-highlighter.printing
+{
+border: none;
+}
+.dp-highlighter.printing .tools
+{
+display: none !important;
+}
+.dp-highlighter.printing li
+{
+display: list-item !important;
+}
+/* Styles for the tools */
+.dp-highlighter .tools
+{
+padding: 3px 8px 3px 10px;
+font: 9px Verdana, Geneva, Arial, Helvetica, sans-serif;
+color: silver;
+background-color: #f8f8f8;
+padding-bottom: 10px;
+border-left: 3px solid #6CE26C;
+}
+.dp-highlighter.nogutter .tools
+{
+border-left: 0;
+}
+.dp-highlighter.collapsed .tools
+{
+border-bottom: 0;
+}
+.dp-highlighter .tools a
+{
+font-size: 9px;
+color: #a0a0a0;
+background-color: inherit;
+text-decoration: none;
+margin-right: 10px;
+}
+.dp-highlighter .tools a:hover
+{
+color: red;
+background-color: inherit;
+text-decoration: underline;
+}
+/* About dialog styles */
+.dp-about { background-color: #fff; color: #333; margin: 0px; padding: 0px; }
+.dp-about table { width: 100%; height: 100%; font-size: 11px; font-family: Tahoma, Verdana, Arial, sans-serif !important; }
+.dp-about td { padding: 10px; vertical-align: top; }
+.dp-about .copy { border-bottom: 1px solid #ACA899; height: 95%; }
+.dp-about .title { color: red; background-color: inherit; font-weight: bold; }
+.dp-about .para { margin: 0 0 4px 0; }
+.dp-about .footer { background-color: #ECEADB; color: #333; border-top: 1px solid #fff; text-align: right; }
+.dp-about .close { font-size: 11px; font-family: Tahoma, Verdana, Arial, sans-serif !important; background-color: #ECEADB; color: #333; width: 60px; height: 22px; }
+/* Language specific styles */
+.dp-highlighter .comment, .dp-highlighter .comments { color: #008200; background-color: inherit; }
+.dp-highlighter .string { color: blue; background-color: inherit; }
+.dp-highlighter .keyword { color: #069; font-weight: bold; background-color: inherit; }
+.dp-highlighter .preprocessor { color: gray; background-color: inherit; }
+Theme code and css are under copyright 2006-2008 Dezzain.com
+*/
+body {
+font-family: Arial, Helvetica;
+font-size: 70%;
+color: #000000;
+margin: 0px;
+padding: 0px;
+background: #FFFFFF url(http://www.templatesimages.com/images/BoxTube/body.gif) repeat-x top;
+}
+.left-option {
+float: left;
+}
+.right-option {
+float: right;
+}
+.download {
+background: #eaeed2 url(http://www.templatesimages.com/images/BoxTube/download.gif) no-repeat left 1px;
+padding: 12px 3px 12px 40px;
+clear: both;
+width: 70%;
+margin-top: 5px;
+margin-bottom: 5px;
+border: 1px solid #DAE1B0;
+font-size: 12px;
+line-height: 17px;
+color: #272727;
+font-weight: 500;
+}
+.warning {
+background: #d5c3c3 url(http://www.templatesimages.com/images/BoxTube/warning.gif) no-repeat left 1px;
+padding: 12px 3px 12px 40px;
+clear: both;
+width: 70%;
+margin-top: 5px;
+margin-bottom: 5px;
+border: 1px solid #C5ABAB;
+font-size: 12px;
+line-height: 17px;
+color: #272727;
+font-weight: 500;
+}
+.note {
+background: #f4f3f3 url(http://www.templatesimages.com/images/BoxTube/note.gif) no-repeat left 1px;
+padding: 12px 3px 12px 40px;
+clear: both;
+width: 70%;
+margin-top: 5px;
+margin-bottom: 5px;
+border: 1px solid #eeeeee;
+font-size: 12px;
+line-height: 17px;
+color: #272727;
+font-weight: 500;
+}
+.alert {
+background: #FFE5BF url(http://www.templatesimages.com/images/BoxTube/alert.gif) no-repeat 5px 8px;
+padding: 12px 3px 12px 40px;
+clear: both;
+width: 70%;
+margin-top: 5px;
+margin-bottom: 5px;
+border: 1px solid #FFCB7D;
+font-size: 12px;
+line-height: 17px;
+color: #272727;
+font-weight: 500;
+}
+.info {
+background: #BFE5FF url(http://www.templatesimages.com/images/BoxTube/info.gif) no-repeat 5px 8px;
+padding: 12px 3px 12px 40px;
+clear: both;
+width: 70%;
+margin-top: 5px;
+margin-bottom: 5px;
+border: 1px solid #66C1FF;
+font-size: 12px;
+line-height: 17px;
+color: #272727;
+font-weight: 500;
+}
+.click {
+background: #d9e7f0 url(http://www.templatesimages.com/images/BoxTube/click.gif) no-repeat left 1px;
+padding: 12px 3px 12px 40px;
+clear: both;
+width: 70%;
+margin-top: 5px;
+margin-bottom: 5px;
+border: 1px solid #B1CDE0;
+font-size: 12px;
+line-height: 17px;
+color: #272727;
+font-weight: 500;
+}
+.pullquote-left {
+font: normal 24px/30px "Times New Roman", Georgia, Tahoma, "Trajan Pro";
+color: #000000;
+margin: 10px 12px 5px 5px;
+padding: 12px 5px;
+float: left;
+width: 30%;
+text-align: left;
+border-top: 1px solid #CCCCCC;
+border-bottom: 1px solid #CCCCCC;
+}
+.pullquote-right {
+font: normal 24px/30px "Times New Roman", Georgia, Tahoma, "Trajan Pro";
+color: #000000;
+margin: 10px 5px 0px 12px;
+padding: 12px 5px;
+float: right;
+width: 30%;
+text-align: right;
+border-top: 1px solid #CCCCCC;
+border-bottom: 1px solid #CCCCCC;
+}
+/* caption */
+.caption-img-left {
+display: block;
+margin: 10px 15px 5px 5px;
+padding: 5px;
+float: left;
+background: #F3F3F3;
+width: 40%;
+border: 1px solid #EFEFEF;
+}
+.caption-img-left p {
+font-size: 1em;
+color: #666666;
+padding: 0px;
+clear: both;
+display: block;
+margin: 0px;
+width: auto;
+}
+.keyword{color:rgb(0,0,255);}
+.comment{color:rgb(0,128,0);}
+.pp{color:rgb(0,0,255);}
+.caption-img-left em {
+font-size: 11px;
+color: #333333;
+margin: 0px;
+padding: 0px;
+clear: both;
+font-style: italic;
+font-family: Arial, Tahoma, "Lucida Sans";
+line-height: 18px;
+text-decoration: none;
+display: block;
+visibility: inherit;
+width: 100%;
+}
+.caption-img-right em {
+font-size: 11px;
+color: #333333;
+margin: 0px;
+padding: 0px;
+clear: both;
+font-style: italic;
+font-family: Arial, Tahoma, "Lucida Sans";
+line-height: 18px;
+text-decoration: none;
+display: block;
+visibility: inherit;
+width: 100%;
+}
+.caption-img-right {
+display: block;
+margin: 10px 5px 5px 15px;
+padding: 5px;
+float: right;
+background: #F3F3F3;
+width: 40%;
+border: 1px solid #EFEFEF;
+}
+.caption-img-right p {
+font-size: 1em;
+color: #666666;
+margin: 0px;
+padding: 0px;
+clear: both;
+width: auto;
+}
+.caption-img-right img {
+clear: both;
+margin: 0px;
+padding: 0px;
+display: block;
+width: 100%;
+}
+.caption-img-left img {
+clear: both;
+margin: 0px;
+padding: 0px;
+display: block;
+width: 100%;
+}
+/* caption end */
+.post-navigator .alignleft {
+float: left;
+width: 98%;
+display: block;
+position: relative;
+}
+.post-navigator .alignright {
+float: right;
+width: 98%;
+display: block;
+position: relative;
+}
+/*
+pre {
+padding: 5px;
+display: block;
+border: 3px solid #CCCCCC;
+font-family: "Courier New", Courier, monospace;
+font-size: 12px;
+color: #333333;
+background: #FFFFFF;
+margin: 8px 0px;
+clear: both;
+width: 90%;
+height: 60px;
+}
+*/
+dl {
+padding-left: 10px;
+font-size: 1.1em;
+margin-top: 8px;
+margin-bottom: 8px;
+font-family: Arial, Helvetica, sans-serif;
+}
+dt {
+margin-bottom: 5px;
+margin-top: 0px;
+font-weight: 400;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 1.1em;
+}
+dd {
+font-style: italic;
+margin-bottom: 8px;
+margin-left: 0px;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 1.1em;
+}
+blockquote {
+clear: both;
+margin: 10px 30px 10px 15px;
+font-family: "Trebuchet MS", Tahoma, "VAGRounded BT", Verdana;
+font-size: 13px;
+color: #000000;
+#font-weight: bold;
+padding: 5px;
+line-height: 24px;
+background: #efefef
+}
+code {
+font-family: "Courier New", Courier, monospace;
+font-size: 12px;
+color: #333333;
+}
+.alignleft {
+text-align: left;
+float: left;
+}
+.alignright {
+text-align: right;
+float: right;
+}
+.center {
+text-align: center;
+margin: 0px auto;
+clear: both;
+}
+img.alignleft {
+padding: 4px;
+float: left;
+margin-right: 10px;
+margin-top: 10px;
+}
+img.alignright {
+padding: 4px;
+float: right;
+margin-top: 10px;
+margin-left: 10px;
+}
+img.center {
+padding: 4px;
+display: block;
+margin: 5px auto;
+clear: both;
+}
+h1, h2, h3, h4, h5, h6 {
+font-family: "Trebuchet MS", "Times New Roman", Tahoma;
+text-transform: capitalize;
+letter-spacing: -1px;
+}
+#wrapper {
+width: 900px;
+margin-right: auto;
+margin-left: auto;
+}
+#header {
+float: left;
+width: 900px;
+padding-top: 6px;
+position: relative;
+}
+#header img {
+border-width: 0px;
+}
+.header-left {
+float: left;
+width: 390px;
+margin: 0;
+padding-top: 5px;
+padding-bottom: 15px;
+}
+.header-left h1 {
+font-size: 30px;
+margin: 0px;
+padding: 0px;
+float: left;
+width: 390px;
+color: #A21300;
+line-height: 30px;
+}
+.header-left h1 a {
+color: #000000;
+text-decoration: none;
+}
+.header-left h1 a:hover {
+color: #990000;
+text-decoration: none;
+}
+.header-left p {
+font-size: 15px;
+#	font-weight: bold;
+margin: 0px;
+padding: 0px;
+float: left;
+width: 390px;
+line-height: 18px;
+color: #333333;
+}
+.header-right {
+float: right;
+width: 500px;
+}
+#navigator {
+background: url(http://www.templatesimages.com/images/BoxTube/navigator.gif) no-repeat center center;
+float: left;
+width: 880px;
+padding-right: 10px;
+padding-left: 10px;
+margin-top: 0px;
+margin-bottom: 8px;
+height: 32px;
+font-family: "Trebuchet MS", Tahoma, "VAGRounded BT", Verdana;
+}
+#navigator ul {
+float: left;
+margin: 0px;
+padding: 0px;
+list-style-type: none;
+}
+#navigator ul ul {
+margin: 0px;
+padding: 0px;
+float: left;
+}
+#navigator ul ul ul{
+margin: 0px;
+padding: 0px;
+float: left;
+}
+#navigator ul li {
+float: left;
+font-size: 14px;
+color: #FFFFFF;
+display: inline;
+font-weight: bold;
+margin: 0px;
+padding: 0px;
+}
+#navigator ul ul li {
+padding: 0px;
+float: left;
+font-size: 14px;
+color: #FFFFFF;
+display: inline;
+}
+#navigator ul ul ul li {
+padding: 0px;
+float: left;
+font-size: 14px;
+color: #FFFFFF;
+display: inline;
+}
+#navigator li a {
+text-align: center;
+padding-right: 12px;
+padding-left: 12px;
+color: #FFFFFF;
+text-decoration: none;
+text-transform: capitalize;
+display: block;
+margin: 0px;
+height: 32px;
+line-height: 32px;
+float: left;
+}
+#navigator li a:hover {
+color: #FFFFFF;
+text-decoration: none;
+text-transform: capitalize;
+padding-right: 12px;
+padding-left: 12px;
+background: #292929 url(http://www.templatesimages.com/images/BoxTube/navs.gif) center center;
+text-align: center;
+display: block;
+margin: 0px;
+line-height: 32px;
+height: 32px;
+float: left;
+}
+#ads-vertical {
+margin: 0px;
+padding: 5px 0px;
+float: left;
+width: 900px;
+text-align: center;
+}
+#content {
+margin: 0px;
+padding: 0px;
+float: left;
+width: 900px;
+position: relative;
+}
+#product-blog {
+width: 615px;
+position: relative;
+padding-top: 1em;
+border-right: 1px solid #eeeeee;
+padding-bottom: 3em;
+float: left;
+}
+#product-blog-home {
+float: left;
+width: 900px;
+position: relative;
+}
+#frontpage-blog {
+float: left;
+width: 620px;
+position: relative;
+padding-top: 0.7em;
+}
+#frontpage-sidebar {
+float: right;
+width: 277px;
+position: relative;
+padding-top: 1em;
+}
+#product-blog h2 {
+float: left;
+width: 600px;
+font-size: 30px;
+line-height: 23px;
+color: #000000;
+margin: 8px 0px;
+padding: 0px;
+letter-spacing: -1px;
+}
+#product-sidebar {
+margin: 0;
+width: 277px;
+position: relative;
+padding-top: 1em;
+float: right;
+}
+#product-sidebar-home {
+float: left;
+width: 900px;
+position: relative;
+padding-top: 1em;
+}
+.product-item {
+background: url(images/products.gif) no-repeat;
+display: block;
+float: left;
+height: 181px;
+width: 179px;
+margin-right: 7px;
+margin-bottom: 5px;
+padding: 10px;
+}
+.product-item a {
+color: #A80000;
+text-decoration: underline;
+}
+.product-item a:hover {
+color: #CC0000;
+text-decoration: none;
+}
+.product-item p {
+}
+.p-items {
+float: left;
+width: 179px;
+margin: 0px 0px 3px;
+padding: 0px;
+}
+.wrap-item {
+float: left;
+width: 179px;
+}
+.p-feedback {
+float: left;
+margin: 0px;
+padding: 0px 10px 0px 17px;
+background: url(http://www.templatesimages.com/images/BoxTube/comment.gif) no-repeat left 1px;
+display: block;
+}
+.p-readmore {
+float: left;
+width: 76px;
+margin: 0px;
+padding: 0px 0px 0px 14px;
+background: url(http://www.templatesimages.com/images/BoxTube/feed.gif) no-repeat left 2px;
+display: block;
+}
+.product-item img {
+clear: both;
+width: 125px;
+height: 125px;
+border-width: 0px;
+margin-bottom: 3px;
+}
+#box1 {
+margin-right: 32px;
+}
+#box2 {
+margin-right: 34px;
+}
+#box3 {
+}
+.post-meta {
+float: left;
+width: 610px;
+padding-bottom: 25px;
+}
+.post-meta h2 {
+font-size: 32px;
+line-height: 38px;
+color: #000000;
+margin: 0px;
+padding: 0px;
+float: left;
+}
+.post-meta h2 a {
+font-size: 22px;
+color: #A21300;
+text-decoration: none;
+}
+.post-meta h2 a:hover {
+color: #000000;
+text-decoration: none;
+}
+.post-static {
+font-size: 13px;
+line-height: 19px;
+margin: 0px;
+padding: 0px 0px 2px;
+float: left;
+width: 610px;
+border-bottom: 1px solid #efefef;
+}
+.post-static a {
+color: #990000;
+text-decoration: none;
+font-weight: bold;
+}
+.post-static a:hover {
+color: #333333;
+text-decoration: underline;
+font-weight: bold;
+}
+.post-content img {
+border-width: 0px;
+margin-right: 10px;
+}
+.post-ads {
+float: left;
+width: 600px;
+font-size: 13px;
+line-height: 22px;
+overflow: hidden;
+padding: 0px;
+}
+.post-content {
+float: left;
+width: 600px;
+padding-top: 4px;
+padding-bottom: 20px;
+font-size: 15px;
+line-height: 24px;
+padding-right: 10px;
+overflow: hidden;
+color: #333333;
+font-family: "Helvetica Neue", Arial, sans-serif
+}
+.post-content ul ul {
+margin: 0px;
+padding: 0px;
+}
+.post-content h1 {
+margin: 0px 0px 5px;
+padding: 0px 0px 3px;
+font-size: 17px;
+font-weight: bold;
+line-height: 20px;
+color: #000000;
+}
+.post-content h2 {
+margin: 0px 0px 5px;
+padding: 0px 0px 3px;
+font-size: 17px;
+font-weight: bold;
+line-height: 20px;
+color: #000000;
+}
+.post-content h3 {
+margin: 0px 0px 5px;
+padding: 0px 0px 3px;
+font-size: 17px;
+font-weight: bold;
+line-height: 20px;
+color: #000000;
+}
+.post-content h4 {
+margin: 0px 0px 5px;
+padding: 0px;
+font-size: 18px;
+font-weight: bold;
+line-height: 24px;
+}
+.post-content h5 {
+margin: 0px 0px 5px;
+padding: 0px;
+font-size: 16px;
+font-weight: bold;
+line-height: 19px;
+}
+.post-content h6 {
+margin: 0px 0px 5px;
+padding: 0px;
+font-size: 14px;
+font-weight: bold;
+line-height: 18px;
+}
+.post-content a {
+color: #063E6A;
+text-decoration: underline;
+font-weight: bold;
+}
+.post-content a:hover {
+color: #004993;
+text-decoration: none;
+font-weight: bold;
+}
+.post-cat {
+padding: 3px;
+float: left;
+width: 600px;
+font-size: 13px;
+line-height: 18px;
+color: #000000;
+font-weight: bold;
+}
+.post-cat a {
+text-decoration: none;
+color: #990000;
+font-weight: normal;
+}
+.post-cat a:hover {
+text-decoration: underline;
+color: #003366;
+font-weight: normal;
+}
+.comm-count {
+float: left;
+width: 580px;
+padding-left: 18px;
+background: url(http://www.templatesimages.com/images/BoxTube/comment.gif) no-repeat left center;
+}
+.cat {
+float: left;
+width: 600px;
+padding: 0px;
+}
+.social {
+float: left;
+width: 595px;
+font-size: 13px;
+line-height: 30px;
+text-transform: capitalize;
+background: #EFEFEF;
+height: 30px;
+border: 1px solid #dedede;
+margin-top: 10px;
+}
+.social a {
+color: #666666;
+text-decoration: none;
+padding-right: 12px;
+padding-left: 12px;
+border-right: 1px solid #D6D6D6;
+}
+.social a:hover {
+color: #000000;
+text-decoration: underline;
+padding-right: 12px;
+padding-left: 12px;
+border-right: 1px solid #D6D6D6;
+}
+.clear-fix {
+float: left;
+height: 25px;
+width: 610px;
+}
+#post-navigator {
+color: #000000;
+margin: 0px;
+padding: 0px;
+float: left;
+width: 580px;
+}
+#post-navigator-single {
+margin: 0px;
+padding: 0px;
+float: left;
+width: 580px;
+font-size: 13px;
+line-height: 20px;
+}
+.wp-pagenavi {
+float: left;
+width: 580px;
+padding-top: 8px;
+padding-bottom: 8px;
+font-size: 12px;
+}
+.pages {
+font-size: 11px;
+color: #000000;
+background: #f8f8f8;
+padding: 2px 5px;
+border: 1px solid #dddddd;
+margin-right: 5px;
+font-weight: bold;
+}
+.current {
+background: #FFFFFF;
+padding: 2px 4px;
+border: 1px solid #CCCCCC;
+margin-left: 4px;
+color: #000000;
+}
+#post-navigator a {
+color: #FFFFFF;
+background: #000000;
+padding: 2px 4px;
+margin: 0px 0px 0px 3px;
+text-decoration: none;
+border: 1px solid #666666;
+}
+#post-navigator a:hover {
+color: #000000;
+background: #EEEEEE;
+padding: 2px 4px;
+margin: 0px 0px 0px 3px;
+text-decoration: none;
+border: 1px solid #CCCCCC;
+}
+#post-navigator-single .alignleft {
+margin: 0px;
+padding: 0px;
+float: left;
+width: 45%;
+overflow: hidden;
+height: 20px;
+}
+#post-navigator-single .alignright {
+margin: 0px;
+padding: 0px;
+float: right;
+width: 45%;
+overflow: hidden;
+height: 20px;
+}
+#post-navigator-single a {
+color: #ffffff;
+background: #000000;
+padding: 5px 8px;
+margin: 0px 0px 0px 3px;
+text-decoration: underline;
+font-weight: bold;
+}
+#post-navigator-single a:hover {
+color: #003366;
+background: #eeeeee;
+padding: 5px 8px;
+margin: 0px 0px 0px 3px;
+text-decoration: none;
+font-weight: bold;
+}
+#comments {
+margin: 0px;
+padding: 0px 0px 10px;
+float: left;
+width: 610px;
+}
+#comments h4 {
+font-size: 17px;
+color: #FFFFFF;
+margin: 20px 0px;
+padding: 5px 12px;
+float: left;
+line-height: 24px;
+display: inline;
+background: #A8A8A8;
+border: 1px solid #000000;
+}
+#comments h5 {
+font-size: 17px;
+color: #FFFFFF;
+margin: 20px 0px;
+padding: 5px 12px;
+float: left;
+line-height: 24px;
+display: inline;
+background: #999999;
+border: 1px solid #990033;
+}
+#comments h5 a {
+color: #FFFFFF;
+text-decoration: none;
+}
+#comments h5 a:hover {
+color: #FFFFFF;
+text-decoration: underline;
+}
+#comments h6 {
+font-size: 17px;
+color: #FFFFFF;
+margin: 20px 0px;
+padding: 5px 12px;
+float: left;
+line-height: 24px;
+display: inline;
+background: #999999;
+border: 1px solid #990033;
+}
+.comment-box {
+float: left;
+width: 548px;
+color: #FFFFFF;
+}
+.comment-box a {
+color: #CCCCCC;
+text-decoration: underline;
+}
+.comment-box a:hover {
+color: #EEEEEE;
+text-decoration: none;
+}
+.top-cb {
+background: url(http://www.templatesimages.com/images/BoxTube/top.gif) no-repeat bottom;
+float: left;
+height: 13px;
+width: 548px;
+}
+.center-cb {
+background: url(http://www.templatesimages.com/images/BoxTube/center.gif) repeat-y;
+float: left;
+width: 518px;
+padding-right: 15px;
+padding-left: 15px;
+font-size: 12px;
+line-height: 17px;
+}
+#comments strong {
+font-size: 17px;
+float: left;
+width: 518px;
+line-height: 17px;
+font-family: "Trebuchet MS", Verdana, sans-serif, "Courier New";
+font-weight: bold;
+}
+#comments .date {
+float: left;
+width: 518px;
+font-size: 12px;
+}
+#comments .text {
+float: left;
+width: 518px;
+padding-top: 5px;
+padding-bottom: 10px;
+font-size: 13px;
+line-height: 20px;
+}
+.bottom-cb {
+background: url(http://www.templatesimages.com/images/BoxTube/bottom.gif) no-repeat top;
+float: left;
+width: 548px;
+height: 36px;
+margin-bottom: 5px;
+}
+.comment-box-alt {
+float: left;
+width: 548px;
+color: #121212;
+}
+.comment-box-alt a {
+color: #A02C1C;
+text-decoration: underline;
+}
+.comment-box-alt a:hover {
+color: #333333;
+text-decoration: underline;
+}
+.top-cb-alt {
+background: url(http://www.templatesimages.com/images/BoxTube/top-alt.gif) no-repeat bottom;
+float: left;
+height: 13px;
+width: 548px;
+}
+.center-cb-alt {
+background: url(http://www.templatesimages.com/images/BoxTube/center-alt.gif) repeat-y;
+float: left;
+width: 518px;
+padding-right: 15px;
+padding-left: 15px;
+font-size: 12px;
+line-height: 17px;
+}
+.bottom-cb-alt {
+background: url(http://www.templatesimages.com/images/BoxTube/bottom-alt.gif) no-repeat top;
+float: left;
+width: 548px;
+height: 36px;
+margin-bottom: 5px;
+}
+.ping {
+padding: 3px;
+float: left;
+width: 550px;
+border: 1px solid #CCCCCC;
+background: #F9F9F9;
+font-size: 13px;
+line-height: 21px;
+color: #121212;
+margin-bottom: 3px;
+}
+.ping-alt {
+padding: 3px;
+float: left;
+width: 550px;
+border: 1px solid #F7f7f7;
+background: #FFFFFF;
+font-size: 13px;
+line-height: 21px;
+color: #121212;
+margin-bottom: 3px;
+}
+.ping a {
+color: #990000;
+text-decoration: none;
+}
+.ping-alt a {
+color: #990000;
+text-decoration: none;
+}
+#comment-form {
+margin: 0px;
+padding: 0px;
+float: left;
+width: 610px;
+}
+#comment-form p {
+margin-bottom: 10px;
+margin-top: 0px;
+font-size: 14px;
+color: #000000;
+font-family: "Trebuchet MS", Verdana, sans-serif, "Courier New";
+font-weight: bold;
+}
+#comment-form label {
+font-size: 15px;
+color: #000000;
+font-weight: bold;
+font-family: "Trebuchet MS", Arial, Verdana, Helvetica, sans-serif;
+line-height: 18px;
+margin: 0px;
+padding: 0px;
+}
+.sb-box {
+width: 300px;
+padding: 7px;
+border: 1px solid #CCCCCC;
+font-size: 13px;
+color: #000000;
+}
+#comment-form .sbb {
+font-family: "Trebuchet MS", Tahoma, "VAGRounded BT", Verdana;
+font-size: 14px;
+font-weight: bold;
+color: #000000;
+margin: 0px;
+padding: 5px 12px;
+}
+#comment-form #policy {
+font-size: 13px;
+color: #666666;
+margin-top: 12px;
+margin-bottom: 0px;
+font-family: Arial, Tahoma, "Lucida Sans";
+line-height: 20px;
+font-weight: normal;
+}
+.com-a {
+width: 520px;
+padding: 10px;
+height: 300px;
+font-size: 13px;
+line-height: 18px;
+color: #000000;
+margin-top: 5px;
+border: 1px solid #CCCCCC;
+}
+.sidebar-box {
+float: left;
+width: 277px;
+background: url(http://img152.imageshack.us/img152/3199/bottomsidebarzj8.gif) no-repeat bottom;
+padding-bottom: 25px;
+color: #222222;
+margin-bottom: 10px;
+}
+.sidebar-box select {
+margin: 0px;
+padding: 4px;
+width: 210px;
+border: 1px solid #dedede;
+font-size: 13px;
+color: #000000;
+background: #FFFFFF;
+font-family: "Trebuchet MS", Tahoma, "VAGRounded BT", Verdana;
+line-height: 120%;
+font-weight: bold;
+}
+.sidebar-box table {
+margin: 0px;
+padding: 0px;
+float: left;
+width: 97%;
+}
+.sidebar-box h2 {
+font-size: 17px;
+line-height: 28px;
+color: #FFFFFF;
+background: url(http://www.templatesimages.com/images/BoxTube/main-sidebar.gif) no-repeat bottom;
+margin: 0px;
+float: left;
+height: 34px;
+width: 237px;
+padding-left: 40px;
+font-family: "Trebuchet MS", Verdana, sans-serif, "Courier New";
+}
+.sidebar-box .widget-content {
+background: url(http://www.templatesimages.com/images/BoxTube/bd-sidebar.gif) repeat-y;
+margin: 0px;
+padding: 10px 20px;
+float: left;
+width: 237px;
+font-size: 13px;
+line-height: 18px;
+color: #000000;
+}
+.sidebar-box .widget-content a {
+color: #A21300;
+text-decoration: none;
+}
+.sidebar-box .widget-content a:hover {
+color: #A21300;
+text-decoration: underline;
+}
+.sidebar-box .widget-content img {
+margin-top: 5px;
+border-width: 0px;
+}
+.list {
+background: url(http://www.templatesimages.com/images/BoxTube/bd-sidebar.gif) repeat-y;
+margin: 0px;
+padding: 10px 20px 5px;
+float: left;
+width: 237px;
+list-style-type: none;
+}
+.sidebar-box img {
+border-width: 0px;
+}
+.sidebar-box ul, .sidebar-box ol {
+margin: 0px;
+padding: 0px;
+float: left;
+width: 227px;
+list-style-type: none;
+}
+.sidebar-box li {
+font-size: 13px;
+line-height: 18px;
+color: #666666;
+margin: 0px 0px 5px;
+padding: 0px;
+float: left;
+width: 237px;
+}
+.sidebar-box ul li {
+font-size: 13px;
+line-height: 18px;
+color: #666666;
+margin: 5px 0px 0px;
+padding: 0px;
+float: left;
+width: 227px;
+}
+.sidebar-box li a {
+background: url(http://www.templatesimages.com/images/BoxTube/dot.gif) no-repeat left 3px;
+padding-left: 10px;
+color: #000000;
+text-decoration: none;
+margin: 0px;
+padding-top: 1px;
+padding-bottom: 1px;
+}
+.sidebar-box li a:hover {
+background: url(http://www.templatesimages.com/images/BoxTube/dot.gif) no-repeat left 3px;
+padding-left: 10px;
+color: #A21300;
+text-decoration: underline;
+padding-top: 1px;
+padding-bottom: 1px;
+}
+.sidebar-box li table {
+margin: 0px;
+padding: 0px;
+float: left;
+width: 95%;
+}
+.nolist {
+background: url(http://www.templatesimages.com/images/BoxTube/bd-sidebar.gif) repeat-y;
+margin: 0px;
+padding: 10px 20px 5px;
+float: left;
+width: 237px;
+list-style-type: none;
+}
+.nolist ul {
+margin: 0px;
+padding: 0px;
+float: left;
+width: 227px;
+list-style-type: none;
+}
+.nolist li {
+font-size: 13px;
+line-height: 24px;
+color: #999999;
+margin: 0px 0px 5px;
+padding: 0px;
+float: left;
+width: 237px;
+}
+.nolist ul li {
+font-size: 13px;
+line-height: 24px;
+color: #666666;
+margin: 5px 0px 0px;
+padding: 0px;
+float: left;
+width: 227px;
+}
+.nolist li a {
+color: #000000;
+text-decoration: none;
+margin: 0px;
+padding-top: 1px;
+padding-bottom: 1px;
+}
+.nolist li img {
+border-width: 0px;
+}
+.nolist li a:hover {
+color: #A21300;
+text-decoration: underline;
+padding-top: 1px;
+padding-bottom: 1px;
+}
+#getflickr {
+background: url(http://www.templatesimages.com/images/BoxTube/bd-sidebar.gif) repeat-y;
+margin: 0px;
+padding: 10px 20px 5px;
+float: left;
+width: 237px;
+list-style-type: none;
+}
+#getflickr  li {
+font-size: 13px;
+line-height: 24px;
+color: #999999;
+margin: 0px 0px 5px;
+padding: 0px;
+float: left;
+}
+#getflickr li img {
+margin: 0px 10px 10px 0px;
+padding: 5px;
+float: left;
+height: 96px;
+width: 96px;
+border: 1px solid #DEDEDE;
+}
+#getflickr li img:hover {
+margin: 0px 10px 10px 0px;
+padding: 5px;
+float: left;
+height: 96px;
+width: 96px;
+border: 1px solid #CCCCCC;
+background: #f9f9f9;
+}
+.adlist {
+background: url(http://www.templatesimages.com/images/BoxTube/bd-sidebar.gif) repeat-y;
+margin: 0px;
+padding: 10px 5px 5px 10px;
+float: left;
+width: 262px;
+list-style-type: none;
+}
+.adlist img {
+border-width: 0px;
+margin: 0px 5px 5px 0px;
+padding: 0px;
+float: left;
+}
+.adlist p {
+margin: 0px;
+padding: 8px 0px 0px 8px;
+float: left;
+width: 254px;
+font-size: 13px;
+line-height: 18px;
+color: #000000;
+}
+.adlist p a {
+color: #990000;
+text-decoration: underline;
+}
+.adlist p a:hover {
+color: #CC0000;
+text-decoration: none;
+}
+#themeswitcher {
+background: url(http://www.templatesimages.com/images/BoxTube/bd-sidebar.gif) repeat-y;
+margin: 0px;
+padding: 4px 20px 0px;
+float: left;
+width: 237px;
+font-size: 11px;
+line-height: 18px;
+color: #232323;
+list-style-type: none;
+}
+#themeswitcher select {
+font-family: "Trebuchet MS", Verdana, sans-serif, "Courier New";
+font-size: 12px;
+font-weight: bold;
+color: #222222;
+width: 230px;
+border-top: 1px solid #DADADA;
+border-right: 1px solid #eeeeee;
+border-bottom: 1px solid #eeeeee;
+border-left: 1px solid #eeeeee;
+}
+.sidebar-box form {
+background: url(http://www.templatesimages.com/images/BoxTube/bd-sidebar.gif) repeat-y;
+margin: 0px;
+padding: 5px 20px 0px;
+float: left;
+width: 237px;
+font-size: 11px;
+line-height: 18px;
+color: #232323;
+list-style-type: none;
+}
+.sidebar-box p {
+margin-top: 5px;
+margin-bottom: 0px;
+}
+.sbm-b {
+padding: 1px;
+width: 230px;
+font-family: "Trebuchet MS", Verdana, sans-serif, "Courier New";
+font-size: 13px;
+font-weight: bold;
+color: #111111;
+border: 1px solid #CCCCCC;
+}
+#footer {
+background: url(http://www.templatesimages.com/images/BoxTube/footer.gif) no-repeat;
+float: left;
+height: 83px;
+width: 880px;
+margin-bottom: 5px;
+margin-top: 5px;
+padding: 15px 10px 10px;
+font-size: 13px;
+line-height: 20px;
+color: #000000;
+text-align: center;
+}
+#footer-bot img {
+border-width: 0px!important;
+}
+#footer a {
+color: #990000;
+text-decoration: none;
+font-weight: bold;
+}
+#footer a:hover {
+color: #910000;
+text-decoration: underline;
+font-weight: bold;
+}
+#footer-bot {
+margin: 0px;
+padding: 0px 0px 5px;
+float: left;
+width: 900px;
+position: relative;
+}
+#footer-bot .sidebar-box {
+float: left;
+width: 277px;
+background: url(http://www.templatesimages.com/images/BoxTube/bottom-sidebar.gif) no-repeat 11px bottom;
+padding-bottom: 25px;
+color: #222222;
+margin-bottom: 0px;
+padding-right: 11px;
+padding-left: 11px;
+}
+/* s-rank */
+#sr_wrapper {
+font-family:Verdana, Arial, "Times New Roman", sans-serif;
+font-size: 11px;
+margin:0px 0 10px;
+display:block;
+}
+#sr_wrapper a, #sr_wrapper a:hover, #sr_wrapper a:visited {
+text-decoration:none;
+font-size:11px;
+background:none;
+border: 0;
+margin: 0;
+line-height:20px;
+}
+#sr_about {
+font-size:8px;
+clear:none;
+display:block;
+margin-left:5px;
+margin-top:25px;
+width:70px;
+}
+.sr_rank_container {
+width: 70px;
+height: 30px;
+display: block;
+text-align: center;
+float: left;
+margin-left: 0px;
+margin-right: 12px;
+}
+.sr_rank_bar {
+width:42px;
+border: 0;
+padding: 0;
+margin: 0;
+font-size: 0;
+display: block;
+}
+.sr_rank_border {
+width:70px;
+border: 1px solid #dedede;
+padding: 0;
+margin: 0;
+text-align: center;
+display: block;
+}
+.sr_rank_bar_filled {
+height: 3px;
+padding: 0;
+margin: 0;
+border: 0;
+display: block;
+}
+.sr_rank_text {
+line-height:1.3em;
+}
+.wp-polls {
+margin: 0px;
+padding: 0px;
+float: left;
+width: 96%;
+}
+.wp-polls form {
+margin: 0px;
+padding: 0px;
+float: left;
+width: 100%;
+}
+#PopularPosts1 h2{
+padding:7px 0 3px 0;
+width:100%;
+margin-bottom:10px;
+font-size:1.3em;
+text-indent:-12px;
+font-size:18px;
+text-align:center;
+color: #A21300; /* Color of the widget's title */
+}
+#PopularPosts1 ul{
+list-style:none;
+counter-reset:li;
+padding:8px 0px 1px;
+left:-7px;
+width:290px;
+}
+#PopularPosts1 li{
+position:relative;
+margin:0 0 10px 0;
+padding: 3px 2px 0 17px;
+left:-5px;
+width:285px;
+}
+#PopularPosts1 ul li{
+background: #eee;
+position: relative;
+display: block;
+padding: .4em .2em .4em 2em;
+*padding: .2em;
+margin: .5em 0;
+background: #ddd;
+text-decoration: none;
+border-radius: .3em;
+transition: all .3s ease-out;
+}
+#PopularPosts1 ul li:before{
+content: counter(li);
+counter-increment: li;
+position: absolute;
+top: 50%;
+margin: -1.3em;
+height: 2em;
+width: 2em;
+line-height: 2em;
+font-size: 15px;
+color: #fff; /* text color of numbers */
+background: #A21300; /* background color of numbers */
+border: .2em solid #fff; /* border color */
+-webkit-box-shadow: 0 8px 5px -7px #888;
+-moz-box-shadow: 0 8px 5px -7px #888;
+box-shadow: 0 8px 5px -7px #888;
+text-align: center;
+font-weight: bold;
+border-radius: 2em;
+position: absolute;
+left: 0;
+transition: all .3s ease-out;
+}
+#PopularPosts1 ul li:hover{
+background: #eee;
+}
+#PopularPosts1 ul li:hover:before{
+transform: rotate(360deg);
+}
+#PopularPosts1 ul li a{
+font: 14px Georgia, serif; /* font size of post titles */
+text-shadow: 0 -1px 2px #fff;
+color: #444;
+display:block;
+min-height:25px;
+text-decoration:none;
+text-transform: uppercase;
+}
+#PopularPosts1 ul li a:hover{
+color: #444;
+}
+--></style>
+<!--SYNTAX HIGHLIGHTER STARTS-->
+<link href='http://alexgorbatchev.com/pub/sh/2.1.364/styles/shCore.css' rel='stylesheet' type='text/css'/>
+<link href='http://alexgorbatchev.com/pub/sh/2.1.364/styles/shThemeDefault.css' rel='stylesheet' type='text/css'/>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shCore.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shBrushCpp.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shBrushCSharp.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shBrushCss.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shBrushJava.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shBrushJScript.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shBrushPhp.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shBrushPython.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shBrushRuby.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shBrushSql.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shBrushVb.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shBrushXml.js' type='text/javascript'></script>
+<script src='http://alexgorbatchev.com/pub/sh/2.1.364/scripts/shBrushPerl.js' type='text/javascript'></script>
+<script language='javascript'> 
+SyntaxHighlighter.config.bloggerMode = true;
+SyntaxHighlighter.config.clipboardSwf = 'http://alexgorbatchev.com/pub/sh/2.1.364/scripts/clipboard.swf';
+SyntaxHighlighter.all();
+</script>
+<!--SYNTAX HIGHLIGHTER ENDS-->
+<!--FORUM START-->
+<!--FORUM ENDS-->
+<link href='https://www.blogger.com/dyn-css/authorization.css?targetBlogID=6038272452605714757&amp;zx=67a79701-1f0b-4eb3-aef5-880dc7ff9caf' media='none' onload='if(media!=&#39;all&#39;)media=&#39;all&#39;' rel='stylesheet'/><noscript><link href='https://www.blogger.com/dyn-css/authorization.css?targetBlogID=6038272452605714757&amp;zx=67a79701-1f0b-4eb3-aef5-880dc7ff9caf' rel='stylesheet'/></noscript>
+</head>
+<body>
+<div class='navbar section' id='navbar'><div class='widget Navbar' data-version='1' id='Navbar1'><script type="text/javascript">
+    function setAttributeOnload(object, attribute, val) {
+      if(window.addEventListener) {
+        window.addEventListener('load',
+          function(){ object[attribute] = val; }, false);
+      } else {
+        window.attachEvent('onload', function(){ object[attribute] = val; });
+      }
+    }
+  </script>
+<div id="navbar-iframe-container"></div>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<script type="text/javascript">
+      gapi.load("gapi.iframes:gapi.iframes.style.bubble", function() {
+        if (gapi.iframes && gapi.iframes.getContext) {
+          gapi.iframes.getContext().openChild({
+              url: 'https://www.blogger.com/navbar.g?targetBlogID\x3d6038272452605714757\x26blogName\x3dPROGRAMMING+INTERVIEWS\x26publishMode\x3dPUBLISH_MODE_BLOGSPOT\x26navbarType\x3dTAN\x26layoutType\x3dLAYOUTS\x26searchRoot\x3dhttp://tech-queries.blogspot.com/search\x26blogLocale\x3den\x26v\x3d2\x26homepageUrl\x3dhttp://tech-queries.blogspot.com/\x26targetPostID\x3d9118956563711443570\x26blogPostOrPageUrl\x3dhttp://tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html\x26vt\x3d7454897826288484729',
+              where: document.getElementById("navbar-iframe-container"),
+              id: "navbar-iframe"
+          });
+        }
+      });
+    </script><script type="text/javascript">
+(function() {
+var script = document.createElement('script');
+script.type = 'text/javascript';
+script.src = '//pagead2.googlesyndication.com/pagead/js/google_top_exp.js';
+var head = document.getElementsByTagName('head')[0];
+if (head) {
+head.appendChild(script);
+}})();
+</script>
+</div></div>
+<div id='wrapper'>
+<!-- skip links for text browsers -->
+<span id='skiplinks' style='display:none;'>
+<a href='#main'>skip to main </a> |
+      <a href='#sidebar'>skip to sidebar</a>
+</span>
+<div id='header'>
+<div class='header-left'>
+<div class='header-left section' id='header-left'><div class='widget Header' data-version='1' id='Header1'>
+<div id='header-inner'>
+<div class='titlewrapper'>
+<h1 class='title'>
+<a href='http://tech-queries.blogspot.nl/'>
+PROGRAMMING INTERVIEWS
+</a>
+</h1>
+</div>
+<div class='descriptionwrapper'>
+<p class='description'><span>
+</span></p>
+</div>
+</div>
+</div></div>
+</div>
+<div class='header-right'>
+<div class='header-right no-items section' id='header-right'></div>
+</div>
+</div>
+<div id='navigator'>
+<ul>
+<li><a href='http://tech-queries.blogspot.nl/'> Home </a></li>
+<li class='page_item'><a href='http://tech-queries.blogspot.com/p/about-programming-interviews.html' title='About'> About </a></li>
+<li class='page_item'><a href='http://tech-queries.blogspot.com/p/discussions.html' title='Discuss'> Discuss </a></li>
+<li class='page_item'><a href='http://akashthoughts.blogspot.com' title='Confused Soul'> My Personal Blog </a></li>
+</ul>
+</div>
+<div id='ads-vertical'>
+<div class='adsense-top-gad no-items section' id='adsense-top-gad'></div>
+</div>
+<!--FORUM START-->
+<!--FORUM ENDS-->
+<div id='content'>
+<div id='product-blog'>
+<div class='main section' id='main'><div class='widget Blog' data-version='1' id='Blog1'>
+<div class='blog-posts hfeed'>
+<!--Can't find substitution for tag [adStart]-->
+<div class='post-meta'>
+<a name='9118956563711443570'></a>
+<h2 class='post-title entry-title'>
+<a href='http://tech-queries.blogspot.nl/2011/04/dynamic-library-dependency-on-mac-os-x.html'>Dynamic library dependency on Mac OS X</a>
+</h2>
+<div class='post-static'>
+
+          Posted by Akash Agrawal
+
+        in Tuesday, April 26, 2011
+<span class='item-control blog-admin pid-1936941811'>
+<a href='https://www.blogger.com/post-edit.g?blogID=6038272452605714757&postID=9118956563711443570&from=pencil' title='Edit Post'>
+<img alt='' class='icon-action' height='18' src='http://www.blogger.com/img/icon18_edit_allbkg.gif' width='18'/>
+</a>
+</span>
+</div>
+<table style='width:600px'>
+<tr>
+<td>
+<iframe allowTransparency='true' frameborder='0' scrolling='no' src='http://www.facebook.com/plugins/like.php?href=http://tech-queries.blogspot.nl/2011/04/dynamic-library-dependency-on-mac-os-x.html&send=false&layout=standard&show_faces=false&width=100&action=like&font=arial&colorscheme=light' style='border:none; overflow:hidden; width:450px; height:40px;'></iframe>
+</td>
+<td>
+<div align='right' style='text-align:right;padding:0 0 0 0;'>
+<a class='twitter-share-button' data-count='horizontal' data-hashtags='programming' data-related='' data-size='large' data-text='Dynamic library dependency on Mac OS X' data-url='http://tech-queries.blogspot.nl/2011/04/dynamic-library-dependency-on-mac-os-x.html' data-via='akashag1001' href='http://twitter.com/share'>Tweet</a>
+<script src='http://platform.twitter.com/widgets.js' type='text/javascript'></script>
+</div>
+</td>
+</tr>
+</table>
+<div class='post-header-line-1'></div>
+<div class='reaction-buttons'>
+</div>
+<span class='star-ratings'>
+</span>
+<div class='post-content'>
+<p><b>Question:</b> We use ldd to find dependencies on Linux platform. Unfortunately, ldd doesn't work on Mac OS X. Which command line tool is equivalent to ldd on Mac OS X?<br /><br /><b>Answer:</b> For Mac OS X, we can use 'otool' in place of ldd for finding dependencies.<br /><br /><b>Command:</b> otool -L &lt;file-path&gt;<br /><br /><b>Example:</b><br />Here is an example for finding dependencies for pdf2swf.<br /><blockquote>akash$ otool -L /usr/local/bin/pdf2swf<br />/usr/local/bin/pdf2swf:<br />/opt/local/lib/libmp3lame.0.dylib (compatibility version 1.0.0, current version 1.0.0)<br />/opt/local/lib/libgif.4.dylib (compatibility version 6.0.0, current version 6.6.0)<br />/opt/local/lib/libjpeg.8.dylib (compatibility version 9.0.0, current version 9.2.0)<br />/opt/local/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.5)<br />/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 123.0.0)<br />/opt/local/lib/libfontconfig.1.dylib (compatibility version 6.0.0, current version 6.4.0)<br />/opt/local/lib/libfreetype.6.dylib (compatibility version 13.0.0, current version 13.0.0)<br />/usr/lib/libstdc++.6.dylib (compatibility version 7.0.0, current version 7.9.0)<br /></blockquote><br />We can also dump all the load commands using "otool -l &lt;file-path&gt;".<br />(On Linux, we can dump the entire contents of the dynamic section with readelf -d &lt;file-path&gt;.)<br /><br />For more options, see <a href="http://www.manpagez.com/man/1/otool/">man page for otool</a>.<div><br /></div><br/><i><b style='color:RED'>Subscribe</b> - To get an automatic feed of all future posts <a href='http://feeds.feedburner.com/tech-queries'>subscribe here</a>, or to receive them via email <a href='http://feedburner.google.com/fb/a/mailverify?uri=tech-queries'>go here and enter your email address in the box</a>. You can also <a href='https://www.facebook.com/ProgrammingInterviews'>like us on facebook</a> and follow me on Twitter <a href='https://twitter.com/akashag1001'>@akashag1001</a>.</i>
+<div class='post-share-buttons'>
+<br/>
+<a class='goog-inline-block share-button sb-email' href='https://www.blogger.com/share-post.g?blogID=6038272452605714757&postID=9118956563711443570&target=email' target='_blank' title='Email This'>
+<span class='share-button-link-text'>Email This</span>
+</a><a class='goog-inline-block share-button sb-blog' href='https://www.blogger.com/share-post.g?blogID=6038272452605714757&postID=9118956563711443570&target=blog' onclick='window.open(this.href, "_blank", "height=270,width=475"); return false;' target='_blank' title='BlogThis!'>
+<span class='share-button-link-text'>BlogThis!</span>
+</a><a class='goog-inline-block share-button sb-twitter' href='https://www.blogger.com/share-post.g?blogID=6038272452605714757&postID=9118956563711443570&target=twitter' target='_blank' title='Share to Twitter'>
+<span class='share-button-link-text'>Share to Twitter</span>
+</a><a class='goog-inline-block share-button sb-facebook' href='https://www.blogger.com/share-post.g?blogID=6038272452605714757&postID=9118956563711443570&target=facebook' onclick='window.open(this.href, "_blank", "height=430,width=640"); return false;' target='_blank' title='Share to Facebook'>
+<span class='share-button-link-text'>Share to Facebook</span>
+</a><div class='goog-inline-block dummy-container'><g:plusone source='blogger:blog:plusone' href='http://tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html' size='medium' width='300' annotation='inline'/></div>
+</div>
+</p>
+<div style='clear: both;'></div>
+</div>
+<div class='post-footer'>
+<div class='post-footer-line post-footer-line-1'>
+<div class='post-cat'>
+<div class='cat'>
+
+          under: 
+<a href='http://tech-queries.blogspot.nl/search/label/Mac' rel='tag'>Mac</a>
+<script src='http://connect.facebook.net/en_US/all.js#xfbml=1'>
+  </script>
+<fb:comments href='http://tech-queries.blogspot.nl/2011/04/dynamic-library-dependency-on-mac-os-x.html' num_posts='5' width='600'></fb:comments>
+</div>
+</div>
+<span class='post-icons'>
+</span>
+</div>
+<div class='post-footer-line post-footer-line-2'>
+</div>
+<div class='post-footer-line post-footer-line-3'></div>
+</div>
+</div>
+<div class='comments' id='comments'>
+<a name='comments'></a>
+<h4>
+
+          1 Comment
+        
+</h4>
+<div class='comment-list'>
+<div class='comment-box-alt'><div class='top-cb-alt'></div>
+<div class='center-cb-alt'>
+<div class='commentcount'></div>
+<strong>
+<a href='https://www.blogger.com/profile/00947970424073797364'>mahasiswa teladan</a>
+<span class='item-control blog-admin pid-951436517'>
+<a href='https://www.blogger.com/delete-comment.g?blogID=6038272452605714757&postID=8569148971334172287' title='Delete Comment'>
+<img src='http://www.blogger.com/img/icon_delete13.gif' style='border:none;'/>
+</a>
+</span>
+</strong>
+<div class='date'><a href='#comment-8569148971334172287' title='comment permalink'>
+August 23, 2013 at 1:02 PM
+</a></div>
+<div class='text'>
+<p>hi...Im student from <a href="http://uii.ac.id//" rel="nofollow">Informatics engineering</a> nice article, <br> thanks for sharing :)</p>
+</div>
+</div><div class='bottom-cb-alt'></div></div>
+</div>
+<p class='comment-footer'>
+<a href='https://www.blogger.com/comment.g?blogID=6038272452605714757&postID=9118956563711443570' onclick=''>Post a Comment</a>
+</p>
+<div id='backlinks-container'>
+<div id='Blog1_backlinks-container'>
+</div>
+</div>
+</div>
+<!--Can't find substitution for tag [adEnd]-->
+</div>
+<div class='post-navigator' id='post-navigator-single'>
+<div class='alignright' id='post-navigator'>
+<a class='blog-pager-newer-link' href='http://tech-queries.blogspot.nl/2011/05/01-knapsack-problem.html' id='Blog1_blog-pager-newer-link' title='Newer Post'>Newer Entries &#187;</a>
+</div>
+<div class='alignleft' id='post-navigator-single'>
+<a class='blog-pager-older-link' href='http://tech-queries.blogspot.nl/2011/04/suicide-workers.html' id='Blog1_blog-pager-older-link' title='Older Post'>&#171; Older Entries</a>
+</div>
+</div>
+<div class='clear'></div>
+</div></div>
+</div>
+<div id='product-sidebar'>
+<div class='sidebar-box'>
+<div class='sidebar-box5 section' id='sidebar-box5'><div class='widget HTML' data-version='1' id='HTML5'>
+<h2 class='title'>Find us on Facebook</h2>
+<div class='widget-content'>
+<iframe src="//www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2FProgrammingInterviews&amp;width=252&amp;height=395&amp;colorscheme=light&amp;show_faces=false&amp;border_color&amp;stream=true&amp;header=false&amp;appId=222271464485161" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:252px; height:395px;" allowtransparency="true"></iframe>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='//www.blogger.com/rearrange?blogID=6038272452605714757&widgetType=HTML&widgetId=HTML5&action=editWidget&sectionId=sidebar-box5' onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML5"));' target='configHTML5' title='Edit'>
+<img alt='' height='18' src='https://resources.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div><div class='widget BlogArchive' data-version='1' id='BlogArchive2'>
+<h2>Archives</h2>
+<div class='widget-content'>
+<div id='ArchiveList'>
+<div id='BlogArchive2_ArchiveList'>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=YEARLY-1451586600000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2016/'>2016</a>
+<span class='post-count' dir='ltr'>(1)</span>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1451586600000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2016/01/'>January</a>
+<span class='post-count' dir='ltr'>(1)</span>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=YEARLY-1420050600000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2015/'>2015</a>
+<span class='post-count' dir='ltr'>(1)</span>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1438367400000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2015/08/'>August</a>
+<span class='post-count' dir='ltr'>(1)</span>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=YEARLY-1388514600000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2014/'>2014</a>
+<span class='post-count' dir='ltr'>(5)</span>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1396290600000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2014/04/'>April</a>
+<span class='post-count' dir='ltr'>(4)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1393612200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2014/03/'>March</a>
+<span class='post-count' dir='ltr'>(1)</span>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=YEARLY-1325356200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2012/'>2012</a>
+<span class='post-count' dir='ltr'>(3)</span>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1346437800000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2012/09/'>September</a>
+<span class='post-count' dir='ltr'>(1)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1338489000000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2012/06/'>June</a>
+<span class='post-count' dir='ltr'>(1)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1330540200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2012/03/'>March</a>
+<span class='post-count' dir='ltr'>(1)</span>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate expanded'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=close&toggle=YEARLY-1293820200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy toggle-open'>&#9660; </span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2011/'>2011</a>
+<span class='post-count' dir='ltr'>(65)</span>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1322677800000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2011/12/'>December</a>
+<span class='post-count' dir='ltr'>(1)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1320085800000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2011/11/'>November</a>
+<span class='post-count' dir='ltr'>(1)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1314815400000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2011/09/'>September</a>
+<span class='post-count' dir='ltr'>(2)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1312137000000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2011/08/'>August</a>
+<span class='post-count' dir='ltr'>(8)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1309458600000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2011/07/'>July</a>
+<span class='post-count' dir='ltr'>(7)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1306866600000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2011/06/'>June</a>
+<span class='post-count' dir='ltr'>(10)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1304188200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2011/05/'>May</a>
+<span class='post-count' dir='ltr'>(5)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate expanded'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=close&toggle=MONTHLY-1301596200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy toggle-open'>&#9660; </span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2011/04/'>April</a>
+<span class='post-count' dir='ltr'>(8)</span>
+<ul class='posts'>
+<li><a href='http://tech-queries.blogspot.nl/2011/04/dynamic-library-dependency-on-mac-os-x.html'>Dynamic library dependency on Mac OS X</a></li>
+<li><a href='http://tech-queries.blogspot.nl/2011/04/suicide-workers.html'>Suicide Workers</a></li>
+<li><a href='http://tech-queries.blogspot.nl/2011/04/integer-knapsack-problem-duplicate.html'>Integer Knapsack Problem (Duplicate Items Permitte...</a></li>
+<li><a href='http://tech-queries.blogspot.nl/2011/04/copy-linked-list-with-next-and-random.html'>Copy a linked list with next and random pointer</a></li>
+<li><a href='http://tech-queries.blogspot.nl/2011/04/elephant-and-banana.html'>Elephant and Bananas</a></li>
+<li><a href='http://tech-queries.blogspot.nl/2011/04/wire-identification-problem.html'>The Wire Identification Problem</a></li>
+<li><a href='http://tech-queries.blogspot.nl/2011/04/find-right-peer-in-tree.html'>Find right peer in a tree</a></li>
+<li><a href='http://tech-queries.blogspot.nl/2011/04/majority-element.html'>Majority Element</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1298917800000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2011/03/'>March</a>
+<span class='post-count' dir='ltr'>(10)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1296498600000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2011/02/'>February</a>
+<span class='post-count' dir='ltr'>(6)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1293820200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2011/01/'>January</a>
+<span class='post-count' dir='ltr'>(7)</span>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=YEARLY-1262284200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2010/'>2010</a>
+<span class='post-count' dir='ltr'>(41)</span>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1291141800000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2010/12/'>December</a>
+<span class='post-count' dir='ltr'>(8)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1288549800000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2010/11/'>November</a>
+<span class='post-count' dir='ltr'>(4)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1285871400000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2010/10/'>October</a>
+<span class='post-count' dir='ltr'>(3)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1283279400000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2010/09/'>September</a>
+<span class='post-count' dir='ltr'>(8)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1280601000000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2010/08/'>August</a>
+<span class='post-count' dir='ltr'>(4)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1277922600000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2010/07/'>July</a>
+<span class='post-count' dir='ltr'>(1)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1272652200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2010/05/'>May</a>
+<span class='post-count' dir='ltr'>(2)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1270060200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2010/04/'>April</a>
+<span class='post-count' dir='ltr'>(6)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1267381800000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2010/03/'>March</a>
+<span class='post-count' dir='ltr'>(5)</span>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=YEARLY-1230748200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2009/'>2009</a>
+<span class='post-count' dir='ltr'>(11)</span>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1249065000000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2009/08/'>August</a>
+<span class='post-count' dir='ltr'>(1)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1243794600000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2009/06/'>June</a>
+<span class='post-count' dir='ltr'>(2)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1241116200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2009/05/'>May</a>
+<span class='post-count' dir='ltr'>(3)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1238524200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2009/04/'>April</a>
+<span class='post-count' dir='ltr'>(4)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1230748200000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2009/01/'>January</a>
+<span class='post-count' dir='ltr'>(1)</span>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=YEARLY-1199125800000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2008/'>2008</a>
+<span class='post-count' dir='ltr'>(9)</span>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1228069800000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2008/12/'>December</a>
+<span class='post-count' dir='ltr'>(2)</span>
+</li>
+</ul>
+<ul>
+<li class='archivedate collapsed'>
+<a class='toggle' href='//tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html?widgetType=BlogArchive&widgetId=BlogArchive2&action=toggle&dir=open&toggle=MONTHLY-1225477800000&toggleopen=MONTHLY-1301596200000'>
+<span class='zippy'>
+
+              &#9658;
+            
+</span>
+</a>
+<a class='post-count-link' href='http://tech-queries.blogspot.nl/2008/11/'>November</a>
+<span class='post-count' dir='ltr'>(7)</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='//www.blogger.com/rearrange?blogID=6038272452605714757&widgetType=BlogArchive&widgetId=BlogArchive2&action=editWidget&sectionId=sidebar-box5' onclick='return _WidgetManager._PopupConfig(document.getElementById("BlogArchive2"));' target='configBlogArchive2' title='Edit'>
+<img alt='' height='18' src='https://resources.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div></div>
+</div>
+<div class='sidebar-box'>
+<div class='sidebar-box6 section' id='sidebar-box6'><div class='widget Label' data-version='1' id='Label1'>
+<h2>I write about</h2>
+<div class='widget-content list-label-widget-content'>
+<ul>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Algorithm'>Algorithm</a>
+<span dir='ltr'>(31)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Amazon%20EC2'>Amazon EC2</a>
+<span dir='ltr'>(3)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Amazon%20Interview'>Amazon Interview</a>
+<span dir='ltr'>(9)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Amazon%20S3'>Amazon S3</a>
+<span dir='ltr'>(5)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Amazon%20SimpleDB'>Amazon SimpleDB</a>
+<span dir='ltr'>(5)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Amazon%20SQS'>Amazon SQS</a>
+<span dir='ltr'>(1)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Architecture'>Architecture</a>
+<span dir='ltr'>(3)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Arrays%2FStrings'>Arrays/Strings</a>
+<span dir='ltr'>(32)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/backtracking'>backtracking</a>
+<span dir='ltr'>(1)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Brain%20Teasers'>Brain Teasers</a>
+<span dir='ltr'>(8)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/C%2B%2B'>C++</a>
+<span dir='ltr'>(3)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Cloud%20Computing'>Cloud Computing</a>
+<span dir='ltr'>(14)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Design%20Pattern'>Design Pattern</a>
+<span dir='ltr'>(2)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Dynamic%20programming'>Dynamic programming</a>
+<span dir='ltr'>(11)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Facebook%20Interview'>Facebook Interview</a>
+<span dir='ltr'>(3)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/General'>General</a>
+<span dir='ltr'>(14)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Git'>Git</a>
+<span dir='ltr'>(2)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Google%20Interview'>Google Interview</a>
+<span dir='ltr'>(6)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Humour'>Humour</a>
+<span dir='ltr'>(1)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Interviews'>Interviews</a>
+<span dir='ltr'>(7)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Link%20List'>Link List</a>
+<span dir='ltr'>(8)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Mac'>Mac</a>
+<span dir='ltr'>(2)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Mathematics'>Mathematics</a>
+<span dir='ltr'>(3)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/MIcrosoft%20Interview'>MIcrosoft Interview</a>
+<span dir='ltr'>(4)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Miscellany'>Miscellany</a>
+<span dir='ltr'>(1)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/python'>python</a>
+<span dir='ltr'>(3)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/queue'>queue</a>
+<span dir='ltr'>(1)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Ruby'>Ruby</a>
+<span dir='ltr'>(9)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/tree'>tree</a>
+<span dir='ltr'>(19)</span>
+</li>
+<li>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/web%20development'>web development</a>
+<span dir='ltr'>(1)</span>
+</li>
+</ul>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='//www.blogger.com/rearrange?blogID=6038272452605714757&widgetType=Label&widgetId=Label1&action=editWidget&sectionId=sidebar-box6' onclick='return _WidgetManager._PopupConfig(document.getElementById("Label1"));' target='configLabel1' title='Edit'>
+<img alt='' height='18' src='https://resources.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div></div>
+</div>
+</div>
+<!-- spacer for skins that want sidebar and main to be the same height-->
+<div class='clear'>&#160;</div>
+</div>
+<!-- end content-wrapper -->
+<div id='footer-bot'>
+<div class='sidebar-box'>
+<div class='sidebar-box1 section' id='sidebar-box1'><div class='widget Label' data-version='1' id='Label4'>
+<div class='widget-content cloud-label-widget-content'>
+<span class='label-size label-size-5'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Algorithm'>Algorithm</a>
+</span>
+<span class='label-size label-size-2'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Amazon%20EC2'>Amazon EC2</a>
+</span>
+<span class='label-size label-size-4'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Amazon%20Interview'>Amazon Interview</a>
+</span>
+<span class='label-size label-size-3'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Amazon%20S3'>Amazon S3</a>
+</span>
+<span class='label-size label-size-3'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Amazon%20SimpleDB'>Amazon SimpleDB</a>
+</span>
+<span class='label-size label-size-1'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Amazon%20SQS'>Amazon SQS</a>
+</span>
+<span class='label-size label-size-2'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Architecture'>Architecture</a>
+</span>
+<span class='label-size label-size-5'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Arrays%2FStrings'>Arrays/Strings</a>
+</span>
+<span class='label-size label-size-1'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/backtracking'>backtracking</a>
+</span>
+<span class='label-size label-size-3'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Brain%20Teasers'>Brain Teasers</a>
+</span>
+<span class='label-size label-size-2'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/C%2B%2B'>C++</a>
+</span>
+<span class='label-size label-size-4'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Cloud%20Computing'>Cloud Computing</a>
+</span>
+<span class='label-size label-size-2'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Design%20Pattern'>Design Pattern</a>
+</span>
+<span class='label-size label-size-4'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Dynamic%20programming'>Dynamic programming</a>
+</span>
+<span class='label-size label-size-2'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Facebook%20Interview'>Facebook Interview</a>
+</span>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='//www.blogger.com/rearrange?blogID=6038272452605714757&widgetType=Label&widgetId=Label4&action=editWidget&sectionId=sidebar-box1' onclick='return _WidgetManager._PopupConfig(document.getElementById("Label4"));' target='configLabel4' title='Edit'>
+<img alt='' height='18' src='https://resources.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div>
+</div>
+</div>
+<div class='sidebar-box'>
+<div class='sidebar-box2 section' id='sidebar-box2'><div class='widget Label' data-version='1' id='Label2'>
+<div class='widget-content cloud-label-widget-content'>
+<span class='label-size label-size-5'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/General'>General</a>
+</span>
+<span class='label-size label-size-2'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Git'>Git</a>
+</span>
+<span class='label-size label-size-3'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Google%20Interview'>Google Interview</a>
+</span>
+<span class='label-size label-size-1'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Humour'>Humour</a>
+</span>
+<span class='label-size label-size-4'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Interviews'>Interviews</a>
+</span>
+<span class='label-size label-size-4'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Link%20List'>Link List</a>
+</span>
+<span class='label-size label-size-2'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Mac'>Mac</a>
+</span>
+<span class='label-size label-size-2'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Mathematics'>Mathematics</a>
+</span>
+<span class='label-size label-size-3'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/MIcrosoft%20Interview'>MIcrosoft Interview</a>
+</span>
+<span class='label-size label-size-1'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Miscellany'>Miscellany</a>
+</span>
+<span class='label-size label-size-2'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/python'>python</a>
+</span>
+<span class='label-size label-size-1'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/queue'>queue</a>
+</span>
+<span class='label-size label-size-4'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/Ruby'>Ruby</a>
+</span>
+<span class='label-size label-size-5'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/tree'>tree</a>
+</span>
+<span class='label-size label-size-1'>
+<a dir='ltr' href='http://tech-queries.blogspot.nl/search/label/web%20development'>web development</a>
+</span>
+<div class='clear'></div>
+<span class='widget-item-control'>
+<span class='item-control blog-admin'>
+<a class='quickedit' href='//www.blogger.com/rearrange?blogID=6038272452605714757&widgetType=Label&widgetId=Label2&action=editWidget&sectionId=sidebar-box2' onclick='return _WidgetManager._PopupConfig(document.getElementById("Label2"));' target='configLabel2' title='Edit'>
+<img alt='' height='18' src='https://resources.blogblog.com/img/icon18_wrench_allbkg.png' width='18'/>
+</a>
+</span>
+</span>
+<div class='clear'></div>
+</div>
+</div>
+</div>
+</div>
+<div class='sidebar-box'>
+</div>
+</div>
+</div>
+<!-- end outer-wrapper -->
+<!-- start Google Analytics -->
+<script type='text/javascript'>
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-18273895-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<!-- end Google Analytics -->
+<!-- Add-in Script for syntax highlighting -->
+<script language='javascript'>  
+dp.SyntaxHighlighter.BloggerMode();  
+dp.SyntaxHighlighter.HighlightAll('code');  
+</script>
+<script src='https://apis.google.com/js/plusone.js' type='text/javascript'></script>
+<!--Het is jouw verantwoordelijkheid om je bezoekers te laten weten dat je cookies gebruikt op je blog. Zie http://www.blogger.com/go/cookiechoices voor meer informatie.-->
+<script defer='' src='/js/cookiechoices.js'></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function(event) {
+      window.cookieChoices && cookieChoices.showCookieConsentBar && cookieChoices.showCookieConsentBar(
+          (window.cookieOptions && cookieOptions.msg) || 'Deze site gebruikt cookies van Google om services te leveren, advertenties te personaliseren en verkeer te analyseren. Informatie over je gebruik van deze site wordt gedeeld met Google. Als je deze site gebruikt, ga je akkoord met het gebruik van cookies.',
+          (window.cookieOptions && cookieOptions.close) || 'Ik snap het',
+          (window.cookieOptions && cookieOptions.learn) || 'Meer informatie',
+          (window.cookieOptions && cookieOptions.link) || 'https://www.blogger.com/go/blogspot-cookies');
+    });
+  </script>
+
+<script type="text/javascript" src="https://www.blogger.com/static/v1/widgets/2060351197-widgets.js"></script>
+<script type='text/javascript'>
+window['__wavt'] = 'AOuZoY4DfaigKlGqcQCN5mQHAIfMY0EoTQ:1511298577461';_WidgetManager._Init('//www.blogger.com/rearrange?blogID\x3d6038272452605714757','//tech-queries.blogspot.nl/2011/04/dynamic-library-dependency-on-mac-os-x.html','6038272452605714757');
+_WidgetManager._SetDataContext([{'name': 'blog', 'data': {'blogId': '6038272452605714757', 'title': 'PROGRAMMING INTERVIEWS', 'url': 'http://tech-queries.blogspot.nl/2011/04/dynamic-library-dependency-on-mac-os-x.html', 'canonicalUrl': 'http://tech-queries.blogspot.com/2011/04/dynamic-library-dependency-on-mac-os-x.html', 'homepageUrl': 'http://tech-queries.blogspot.nl/', 'searchUrl': 'http://tech-queries.blogspot.nl/search', 'canonicalHomepageUrl': 'http://tech-queries.blogspot.com/', 'blogspotFaviconUrl': 'http://tech-queries.blogspot.nl/favicon.ico', 'bloggerUrl': 'https://www.blogger.com', 'hasCustomDomain': false, 'httpsEnabled': true, 'enabledCommentProfileImages': true, 'gPlusViewType': 'FILTERED_POSTMOD', 'adultContent': false, 'analyticsAccountNumber': '', 'encoding': 'UTF-8', 'locale': 'en', 'localeUnderscoreDelimited': 'en', 'languageDirection': 'ltr', 'isPrivate': false, 'isMobile': false, 'isMobileRequest': false, 'mobileClass': '', 'isPrivateBlog': false, 'feedLinks': '\x3clink rel\x3d\x22alternate\x22 type\x3d\x22application/atom+xml\x22 title\x3d\x22PROGRAMMING INTERVIEWS - Atom\x22 href\x3d\x22http://tech-queries.blogspot.com/feeds/posts/default\x22 /\x3e\n\x3clink rel\x3d\x22alternate\x22 type\x3d\x22application/rss+xml\x22 title\x3d\x22PROGRAMMING INTERVIEWS - RSS\x22 href\x3d\x22http://tech-queries.blogspot.com/feeds/posts/default?alt\x3drss\x22 /\x3e\n\x3clink rel\x3d\x22service.post\x22 type\x3d\x22application/atom+xml\x22 title\x3d\x22PROGRAMMING INTERVIEWS - Atom\x22 href\x3d\x22https://www.blogger.com/feeds/6038272452605714757/posts/default\x22 /\x3e\n\n\x3clink rel\x3d\x22alternate\x22 type\x3d\x22application/atom+xml\x22 title\x3d\x22PROGRAMMING INTERVIEWS - Atom\x22 href\x3d\x22http://tech-queries.blogspot.com/feeds/9118956563711443570/comments/default\x22 /\x3e\n', 'meTag': '', 'openIdOpTag': '', 'googleProfileUrl': 'https://plus.google.com/109333543971720464478', 'adsenseClientId': 'ca-pub-6440100867402536', 'adsenseHostId': 'ca-host-pub-1556223355139109', 'adsenseHasAds': false, 'view': '', 'dynamicViewsCommentsSrc': '//www.blogblog.com/dynamicviews/4224c15c4e7c9321/js/comments.js', 'dynamicViewsScriptSrc': '//www.blogblog.com/dynamicviews/4236744a022c6404', 'plusOneApiSrc': 'https://apis.google.com/js/plusone.js', 'sharing': {'platforms': [{'name': 'Get link', 'key': 'link', 'shareMessage': 'Get link', 'target': ''}, {'name': 'Facebook', 'key': 'facebook', 'shareMessage': 'Share to Facebook', 'target': 'facebook'}, {'name': 'BlogThis!', 'key': 'blogThis', 'shareMessage': 'BlogThis!', 'target': 'blog'}, {'name': 'Twitter', 'key': 'twitter', 'shareMessage': 'Share to Twitter', 'target': 'twitter'}, {'name': 'Pinterest', 'key': 'pinterest', 'shareMessage': 'Share to Pinterest', 'target': 'pinterest'}, {'name': 'Google+', 'key': 'googlePlus', 'shareMessage': 'Share to Google+', 'target': 'googleplus'}, {'name': 'Email', 'key': 'email', 'shareMessage': 'Email', 'target': 'email'}], 'googlePlusShareButtonWidth': 300, 'googlePlusBootstrap': '\x3cscript type\x3d\x22text/javascript\x22\x3ewindow.___gcfg \x3d {\x27lang\x27: \x27en\x27};\x3c/script\x3e'}, 'hasCustomJumpLinkMessage': false, 'jumpLinkMessage': 'Read more', 'pageType': 'item', 'postId': '9118956563711443570', 'pageName': 'Dynamic library dependency on Mac OS X', 'pageTitle': 'PROGRAMMING INTERVIEWS: Dynamic library dependency on Mac OS X'}}, {'name': 'features', 'data': {'lazy_images': 'false', 'unsupported_browser_message': 'false', 'lightbox_img_parsing': 'true', 'video_theatre_support': 'true', 'sharing_get_link_dialog': 'false', 'sharing_native': 'false'}}, {'name': 'messages', 'data': {'edit': 'Edit', 'linkCopiedToClipboard': 'Link copied to clipboard!', 'ok': 'Ok', 'postLink': 'Post Link'}}, {'name': 'template', 'data': {'name': 'custom', 'localizedName': 'Custom', 'isResponsive': false, 'isAlternateRendering': false, 'isCustom': true}}, {'name': 'view', 'data': {'classic': {'name': 'classic', 'url': '?view\x3dclassic'}, 'flipcard': {'name': 'flipcard', 'url': '?view\x3dflipcard'}, 'magazine': {'name': 'magazine', 'url': '?view\x3dmagazine'}, 'mosaic': {'name': 'mosaic', 'url': '?view\x3dmosaic'}, 'sidebar': {'name': 'sidebar', 'url': '?view\x3dsidebar'}, 'snapshot': {'name': 'snapshot', 'url': '?view\x3dsnapshot'}, 'timeslide': {'name': 'timeslide', 'url': '?view\x3dtimeslide'}, 'isMobile': false, 'title': 'Dynamic library dependency on Mac OS X', 'description': 'Question:  We use ldd to find dependencies on Linux platform. Unfortunately, ldd doesn\x27t work on Mac OS X. Which command line tool is equiva...', 'url': 'http://tech-queries.blogspot.nl/2011/04/dynamic-library-dependency-on-mac-os-x.html', 'type': 'item', 'isSingleItem': true, 'isMultipleItems': false, 'isError': false, 'isPage': false, 'isPost': true, 'isHomepage': false, 'isArchive': false, 'isLabelSearch': false, 'postId': 9118956563711443570}}]);
+_WidgetManager._RegisterWidget('_NavbarView', new _WidgetInfo('Navbar1', 'navbar', null, document.getElementById('Navbar1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HeaderView', new _WidgetInfo('Header1', 'header-left', null, document.getElementById('Header1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_BlogView', new _WidgetInfo('Blog1', 'main', null, document.getElementById('Blog1'), {'cmtInteractionsEnabled': false, 'useNgc': false, 'lightboxEnabled': true, 'lightboxModuleUrl': 'https://www.blogger.com/static/v1/jsbin/79773119-lbx.js', 'lightboxCssUrl': 'https://www.blogger.com/static/v1/v-css/368954415-lightbox_bundle.css'}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML5', 'sidebar-box5', null, document.getElementById('HTML5'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_BlogArchiveView', new _WidgetInfo('BlogArchive2', 'sidebar-box5', null, document.getElementById('BlogArchive2'), {'languageDirection': 'ltr', 'loadingMessage': 'Loading\x26hellip;'}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_LabelView', new _WidgetInfo('Label1', 'sidebar-box6', null, document.getElementById('Label1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_LabelView', new _WidgetInfo('Label4', 'sidebar-box1', null, document.getElementById('Label4'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_LabelView', new _WidgetInfo('Label2', 'sidebar-box2', null, document.getElementById('Label2'), {}, 'displayModeFull'));
+</script>
+</body>
+</html>
