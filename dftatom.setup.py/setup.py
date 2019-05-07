@@ -10,12 +10,14 @@
 #     COLLECT_GCC=C:\Users\IEUser\Anaconda2\Scripts\..\share\mingwpy\bin\gfortran.exe
 #     COLLECT_LTO_WRAPPER=C:/Users/IEUser/Anaconda2/share/mingwpy/bin/../libexec/gcc/i686-w64-mingw32/4.9.2/lto-wrapper.exe
 #     [...]
+# |- gfortran on CentOS desktops does not print --libdir either
+#    therefore changed default return value to empty string to make compilation with Makefile.manual succeed
 def get_gfortran_libdir():
 	from subprocess import Popen, PIPE
 	cmd = 'gfortran -v'
 	p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	stdout, stderr = p.communicate()
-	gfortran_libdir = None
+	gfortran_libdir = ""
 	for o in stderr.split():
 		if o.startswith("--libdir="): 
 			gfortran_libdir = o[9:]
