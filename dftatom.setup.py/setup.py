@@ -19,7 +19,7 @@ def get_gfortran_libdir():
 	stdout, stderr = p.communicate()
 	gfortran_libdir = ""
 	for o in stderr.split():
-		if o.startswith("--libdir="): 
+		if str(o).startswith("--libdir="): 
 			gfortran_libdir = o[9:]
 	return gfortran_libdir
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
             language='c++',
             include_dirs = [numpy.get_include()],
             libraries = ["gfortran","quadmath"],
-            library_dirs = ["C:\Users\IEUser\Anaconda2\share\mingwpy\lib\gcc\i686-w64-mingw32\4.9.2"],
+            library_dirs = [r"C:\Users\IEUser\Anaconda2\share\mingwpy\lib\gcc\i686-w64-mingw32\4.9.2"],
             extra_objects = [join("..", "src", "libdftatom.a")]
         )
     ]
