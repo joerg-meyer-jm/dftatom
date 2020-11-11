@@ -1,11 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# within anaconda environment:
-# 1) conda install clang_osx-64 clangxx_osx-64 gfortran_osx-64
+# macOS: Anaconda3-2020.07-MacOSX-x86_64
 #       -> https://docs.conda.io/projects/conda-build/en/latest/resources/compiler-tools.html
+# 1) conda install clang_osx-64 clangxx_osx-64 gfortran_osx-64
+#
+# IE11-Win81 (virtualbox image): Anaconda3-2020.07-Windows-x86
+#	-> https://python-at-risoe.pages.windenergy.dtu.dk/compiling-on-windows/common_errors.htmlvirtualbox image): 
+# 1) conda install m2w64-toolchain m2-make libpython
+#
+#
 # 2) make -f Makefile.manual
-# 3) python setup.py build
+# 3) python setup.py build --compiler=mingw32
+#
+# perhaps TODO: is there a platform independent way to include step 2) in setup.py?
 
 if __name__ == '__main__':
 
