@@ -9,29 +9,31 @@
 
 if __name__ == '__main__':
 
-    get_gfortran_libdir()
-    quit()
+    from os.path import join
+    from distutils.extension import Extension
+    import numpy
 
-    # Makefile.manual 
+    # Makefile.manual
     # | assuming that gfortran has been used for building
-    gfortran_libdir = get_gfortran_libdir()
+    #
+    # Homebrew python3+pip3
+    libraries = ["gfortran"]
+    library_dirs = ["/usr/local/Cellar/gcc/10.2.0/lib/gcc/10"]
+    #
+    # anaconda3/macos
+    #libraries = ["gfortran"]
+    #library_dirs = []
+    #
+    # mingw(32)py from anaconda2/pip on Windows7 (32-bit)
+    #libraries = ["gfortran","quadmath"]
+    #library_dirs = [r"C:\Users\IEUser\Anaconda2\share\mingwpy\lib\gcc\i686-w64-mingw32\4.9.2"]
+    #
     dftatom_extension_manual = [
-        Extension("dftatom.lib.dftatom_wrapper", [join("dftatom","lib","dftatom_wrapper.pyx")], 
+        Extension("dftatom.lib.dftatom_wrapper", [join("dftatom","lib","dftatom_wrapper.pyx")],
             language='c++',
             include_dirs = ["src", numpy.get_include()],
-            libraries = ["gfortran"],
-            extra_objects = [join("src", "libdftatom.a")]
-        )
-    ]
-    
-    # Makefile.manual for mingw(32)py from anaconda2/pip on Windows7 (32-bit)
-    # | assuming that gfortran has been used for building
-    dftatom_extension_manual_win32 = [
-        Extension("dftatom.lib.dftatom_wrapper", [join("dftatom","lib","dftatom_wrapper.pyx")], 
-            language='c++',
-            include_dirs = [numpy.get_include()],
-            libraries = ["gfortran","quadmath"],
-            library_dirs = [r"C:\Users\IEUser\Anaconda2\share\mingwpy\lib\gcc\i686-w64-mingw32\4.9.2"],
+            libraries = libraries,
+            library_dirs = library_dirs,
             extra_objects = [join("src", "libdftatom.a")]
         )
     ]
