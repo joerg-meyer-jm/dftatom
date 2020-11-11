@@ -15,6 +15,11 @@ F90 = gfortran
 #.  Error: Fortran 2003: ISO_C_BINDING module at (1)
 F90FLAGS = -Wall -Wextra -Wimplicit-interface -fPIC
 #
+# suppress warning when linking with libraries from Anaconda distribution
+# (which is apparently built to also run on older macOS versions)
+#	https://stackoverflow.com/questions/25352389/what-is-the-difference-between-macosx-deployment-target-and-mmacosx-version-min
+#F90FLAGS += -mmacosx-version-min=10.9
+#
 # Debug flags:
 F90FLAGS += -g -fbounds-check
 # Release flags:
