@@ -6,9 +6,9 @@
 # 1) conda install clang_osx-64 clangxx_osx-64 gfortran_osx-64
 #
 # IE11-Win81 (virtualbox image): Anaconda3-2020.07-Windows-x86
-#	-> https://python-at-risoe.pages.windenergy.dtu.dk/compiling-on-windows/common_errors.htmlvirtualbox image): 
-# 1) conda install m2w64-toolchain m2-make libpython
-#
+#	-> https://python-at-risoe.pages.windenergy.dtu.dk/compiling-on-windows/common_errors.htmlvirtualbox image):
+# 1) conda install libpython m2w64-toolchain m2-make
+#    optional: conda install m2-grep m2-vim m2
 #
 # 2) make -f Makefile.manual
 # 3) python setup.py build --compiler=mingw32
@@ -25,16 +25,12 @@ if __name__ == '__main__':
     # | assuming that gfortran has been used for building
     #
     # Homebrew python3+pip3
-    libraries = ["gfortran"]
-    library_dirs = ["/usr/local/Cellar/gcc/10.2.0/lib/gcc/10"]
+    #libraries = ["gfortran"]
+    #library_dirs = ["/usr/local/Cellar/gcc/10.2.0/lib/gcc/10"]
     #
     # anaconda3/macos
-    #libraries = ["gfortran"]
-    #library_dirs = []
-    #
-    # mingw(32)py from anaconda2/pip on Windows7 (32-bit)
-    #libraries = ["gfortran","quadmath"]
-    #library_dirs = [r"C:\Users\IEUser\Anaconda2\share\mingwpy\lib\gcc\i686-w64-mingw32\4.9.2"]
+    libraries = ["gfortran"]
+    library_dirs = []
     #
     dftatom_extension_manual = [
         Extension("dftatom.lib.dftatom_wrapper", [join("dftatom","lib","dftatom_wrapper.pyx")],
