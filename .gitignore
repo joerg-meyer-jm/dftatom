@@ -1,10 +1,16 @@
 # CMake
-cmake/cython_test.cpp
-build
+#cmake/cython_test.cpp
+#
 # standard Make ("manual")
-*.o
-*.mod
-src/libdftatom.a
-tests/atom_U/F_atom_U
-tests/lda/conv_lda
-tests/rlda/conv_rlda
+#*.o
+#*.mod
+#src/libdftatom.a
+#tests/atom_U/F_atom_U
+#tests/lda/conv_lda
+#tests/rlda/conv_rlda
+#
+# CMake
+#build.cmake
+#
+# setup.py
+#build
