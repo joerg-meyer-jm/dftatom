@@ -17,7 +17,7 @@ def get_gfortran_libdir():
 	cmd = 'gfortran -v'
 	p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
 	stdout, stderr = p.communicate()
-	gfortran_libdir = ""
+	gfortran_libdir = None
 	for o in stderr.split():
 		if str(o).startswith("--libdir="): 
 			gfortran_libdir = o[9:]
@@ -39,12 +39,13 @@ if __name__ == '__main__':
     ]
     # Makefile.manual 
     # | assuming that gfortran has been used for building
+    gfortran_libdir = get_gfortran_libdir()
     dftatom_extension_manual = [
         Extension("dftatom._dftatom_wrapper", [join("dftatom","_dftatom_wrapper.pyx")], 
             language='c++',
             include_dirs = [numpy.get_include()],
             libraries = ["gfortran"],
-            library_dirs = [get_gfortran_libdir()],
+            library_dirs = [gfortran_libdir] if gfortran_libdir is not None else [],
             extra_objects = [join("..", "src", "libdftatom.a")]
         )
     ]
