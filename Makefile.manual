@@ -22,6 +22,8 @@ F90FLAGS = -Wall -Wextra -Wimplicit-interface -fPIC
 # This flag is not supported by gfortran 4.8.5 provided by anaconda3 toolchain package gfortran_osx-64.
 # Therefore, use environment variable instead.
 export MACOSX_DEPLOYMENT_TARGET=10.9
+# tests fail if not set
+export DYLD_FALLBACK_LIBRARY_PATH=/usr/local/Anaconda3/lib
 #
 # Debug flags:
 F90FLAGS += -g -fbounds-check
